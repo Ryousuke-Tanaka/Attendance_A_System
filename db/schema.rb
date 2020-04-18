@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20200415141909) do
+ActiveRecord::Schema.define(version: 20200417142313) do
 
   create_table "users", force: :cascade do |t|
     t.string "name"
@@ -20,6 +20,10 @@ ActiveRecord::Schema.define(version: 20200415141909) do
     t.string "password_digest"
     t.string "remember_digest"
     t.boolean "admin", default: false
+    t.string "department", default: "未所属"
+    t.datetime "basic_time", default: "2020-04-16 23:00:00"
+    t.datetime "start_work_time", default: "2020-04-17 00:00:00"
+    t.datetime "finish_work_time", default: "2020-04-17 09:00:00"
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 
