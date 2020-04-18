@@ -3,14 +3,14 @@ class UsersController < ApplicationController
   before_action :logged_in_user, only: [:index, :show, :edit, :update, :destroy]
   before_action :correct_user, only: [:edit, :update]
   before_action :admin_user, only: :destroy
+  before_action :set_one_month, only: :show
   
   def index
     @users = User.paginate(page: params[:page], per_page: 20 )
   end
   
   def show
-    @first_day = Date.current.beginning_of_month
-    @last_day = @first_day.end_of_month
+   @worked_sum = @attendances.where.not(started_at: nil).count
   end
   
   def new
@@ -49,7 +49,7 @@ class UsersController < ApplicationController
   private
   
     def user_params
-      params.require(:user).permit(:name, :email, :department, :password, :password_confirmation)
+      params.require(:user).permit(:name, :email, :affiliation, :employee_number, :uid, :password, :password_confirmation)
     end
     
     # beforeフィルター
@@ -74,6 +74,14 @@ class UsersController < ApplicationController
       unless current_user?(@user)
         flash[:danger] = "他のユーザー情報は閲覧できません。"
         redirect_to root_url 
+      end
+    end
+    
+    # システム管理者かどうか判定
+    def admin_user
+      unless current_user.admin?
+      flash[:danger] = "管理者権限がありません。"
+      redirect_to root_url
       end
     end
 end
