@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   before_action :set_user, only: [:show, :edit, :update, :destroy]
-  before_action :logged_in_user, only: [:index, :show, :edit, :update, :destroy]
+  before_action :logged_in_user, only: [:show, :index, :show, :edit, :update, :destroy]
   before_action :correct_user, only: [:edit, :update]
   before_action :admin_user, only: :destroy
   before_action :set_one_month, only: :show
@@ -53,35 +53,4 @@ class UsersController < ApplicationController
     end
     
     # beforeフィルター
-    
-    # paramsハッシュからユーザーを取得
-    def set_user
-      @user = User.find(params[:id])
-    end
-    
-    # ログイン済みのユーザーか確認
-    def logged_in_user
-      unless logged_in?
-        store_location
-        flash[:danger] = "ログインしてください。"
-        redirect_to login_url
-      end
-    end
-    
-    # アクセスしたユーザーが現在ログインしているユーザーか確認
-    def correct_user
-      @user = User.find(params[:id])
-      unless current_user?(@user)
-        flash[:danger] = "他のユーザー情報は閲覧できません。"
-        redirect_to root_url 
-      end
-    end
-    
-    # システム管理者かどうか判定
-    def admin_user
-      unless current_user.admin?
-      flash[:danger] = "管理者権限がありません。"
-      redirect_to root_url
-      end
-    end
 end
