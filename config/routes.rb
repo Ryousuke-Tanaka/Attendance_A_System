@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
   root 'static_pages#top'
   get '/signup', to: 'users#new'
+  get '/users/id/search', to: 'users#search'
   
   # ログイン機能
   get '/login', to: 'sessions#new'

@@ -2,8 +2,8 @@
 <div>
   <table class="table table-bordered table-condensed user-table">
     <tr>
-      <td><%= link_to "◀", user_path(date: @first_day.prev_month), class: "btn btn-primary" %>
-          <%= l(@first_day, format: :middle) %>時間管理表
+      <td><%= link_to "◀", user_path(date: @first_day.prev_month), class: "btn btn-primary" %>&nbsp;&nbsp;
+          <%= l(@first_day, format: :middle) %>時間管理表&nbsp;&nbsp;
           <%= link_to "▶", user_path(date: @first_day.next_month), class: "btn btn-primary" %>
       </td>
       <td>
@@ -23,6 +23,14 @@
       <td>締め：<%= l(@last_day, format: :short) %></td>
     </tr>
   </table>
+</div>
+
+<div>
+  <% if @user.superior == true %>
+    【所属長承認申請のお知らせ】件<br>
+    【勤怠変更申請のお知らせ】件<br>
+    【残業申請のお知らせ】件<br>
+  <% end %>
 </div>
 
 <div class="btn-users-shows">
@@ -105,24 +113,33 @@
     
     <tfoot>
       <tr>
-        <td rowspan="3"></td>
-        <td rowspan="3">累計日数</td>
-        <td rowspan="3" colspan="7">総合勤務時間</td>
-        <td rowspan="3">累計在社時間<br>
-            00:00
-        </td>
-        <td rowspan="3" colspan="5"></td>
+        <td rowspan="4"></td>
+        <td rowspan="2" colspan="2">累計日数</td>
+        <td rowspan="2" colspan="6">総合勤務時間</td>
+        <td rowspan="2">累計在社時間</td>
+        <td rowspan="4" colspan="5"></td>
         <td>所属長承認：</td>
+      </tr>
+      <tr>
+        
       </tr>
       
       <tr>
+        <td rowspan="2" colspan="2"><%= @attendances.count %></td>
+        <td rowspan="2" colspan="6"><%= format_basic_info(@user.basic_time).to_f * @worked_sum %></td>
+        <td rowspan="2"><%= format("%.2f", @total_working_times.to_f) %></td>
         <td>
-          <li class="dropdown">
+          <ul class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
               <b class="caret"></b>
             </a>
+          </ul>
           <ul class="dropdown-menu">
-            <li></li>
+            <% unless @superiors.nil? %>
+              <% @superiors.each do |superior| %>
+                <%= superior.name %>
+              <% end %>
+            <% end %>
           </ul>
         </td>
       </tr>
