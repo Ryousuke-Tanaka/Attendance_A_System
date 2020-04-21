@@ -3,7 +3,7 @@
 
 <div class="col-md-4 col-md-offset-8" id="search-users">
   <p>ユーザー名検索</p>
-  <%= form_with url: users_id_search_path(@users), method: :get, local: true do |f|  %>
+  <%= form_with url: search_user_path(@users), method: :get, local: true do |f|  %>
     <%= f.text_field :name, placeholder: "キーワードを入力..." %>
     <%= f.submit "検索", class: "btn-primary" %>
   <% end %>

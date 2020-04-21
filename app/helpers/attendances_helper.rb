@@ -15,6 +15,11 @@ module AttendancesHelper
     format("%.2f",(((finish - start) / 60) / 60.0))
   end
   
+  # 翌日にチェックが入っていら場合の在社時間を計算
+  def spread_day_working_times(start, finish)
+    format("%.2f",(((finish - start) / 60) / 60.0) + 24)
+  end
+  
   # 時間を15分刻みで表示
   def set_minutes(time)
     format("%.2d", time.floor_to(15.minutes).min)
