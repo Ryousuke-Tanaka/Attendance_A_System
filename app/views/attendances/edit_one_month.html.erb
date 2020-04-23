@@ -39,11 +39,7 @@
               <td><%= attendance.check_box :spread_day, :as => :boolean %></td>
               <td>
                 <% if day.started_at.present? && day.finished_at.present? %>
-                  <% if day.spread_day %>
-                    <%= spread_day_working_times(day.started_at, day.finished_at) %>
-                  <% else %>
-                    <%= working_times(day.started_at, day.finished_at) %>
-                  <% end %>
+                  <%= working_times(day.started_at, day.finished_at, day.spread_day) %>
                 <% end %>
               </td>
               <td><%= attendance.text_field :note, placeholder: "理由を入力してください。", class: "form-control" %></td>
