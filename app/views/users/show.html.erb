@@ -126,7 +126,7 @@
       
       <tr>
         <td rowspan="2" colspan="2"><%= @attendances.count %></td>
-        <td rowspan="2" colspan="6"><%= format_basic_info(@user.basic_time).to_f * @worked_sum %></td>
+        <td rowspan="2" colspan="6"><%= format_basic_info(@user.work_time).to_f * @worked_sum %></td>
         <td rowspan="2"><%= format("%.2f", @total_working_times.to_f) %></td>
         <td>
           <%= form_with url: user_path(@user), method: :patch, local: true do |f|  %>
