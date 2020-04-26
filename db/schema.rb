@@ -23,7 +23,6 @@ ActiveRecord::Schema.define(version: 20200426045112) do
     t.boolean "spread_day", default: false
     t.datetime "estimated_finished_time"
     t.string "job_description"
-    t.string "boss"
     t.index ["user_id"], name: "index_attendances_on_user_id"
   end
 
@@ -43,6 +42,7 @@ ActiveRecord::Schema.define(version: 20200426045112) do
     t.boolean "superior", default: false
     t.integer "employee_number"
     t.integer "uid"
+    t.string "boss"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["employee_number"], name: "index_users_on_employee_number", unique: true
     t.index ["uid"], name: "index_users_on_uid", unique: true
