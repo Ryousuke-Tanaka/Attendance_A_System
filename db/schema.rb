@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20200426045112) do
+ActiveRecord::Schema.define(version: 20200429010333) do
 
   create_table "attendances", force: :cascade do |t|
     t.date "worked_on"
@@ -27,22 +27,36 @@ ActiveRecord::Schema.define(version: 20200426045112) do
     t.index ["user_id"], name: "index_attendances_on_user_id"
   end
 
+  create_table "bases", force: :cascade do |t|
+    t.string "base_id"
+    t.string "integer"
+    t.string "base_name"
+    t.string "attendance_type"
+    t.integer "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["base_id", "user_id"], name: "index_bases_on_base_id_and_user_id", unique: true
+    t.index ["user_id"], name: "index_bases_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "name"
     t.string "email"
+    t.integer "base_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "password_digest"
     t.string "remember_digest"
     t.boolean "admin", default: false
     t.string "affiliation", default: "未所属"
-    t.datetime "basic_time", default: "2020-04-25 23:00:00"
-    t.datetime "work_time", default: "2020-04-25 22:30:00"
-    t.datetime "designated_work_start_time", default: "2020-04-26 00:00:00"
-    t.datetime "designated_work_end_time", default: "2020-04-26 09:00:00"
+    t.datetime "basic_time", default: "2020-04-28 23:00:00"
+    t.datetime "work_time", default: "2020-04-28 22:30:00"
+    t.datetime "designated_work_start_time", default: "2020-04-29 00:00:00"
+    t.datetime "designated_work_end_time", default: "2020-04-29 09:00:00"
     t.boolean "superior", default: false
     t.integer "employee_number"
     t.integer "uid"
+    t.index ["base_id"], name: "index_users_on_base_id"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["employee_number"], name: "index_users_on_employee_number", unique: true
     t.index ["uid"], name: "index_users_on_uid", unique: true
