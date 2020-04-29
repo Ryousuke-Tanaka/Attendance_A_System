@@ -1,1 +1,26 @@
+<% provide(:title, "拠点一覧") %>
+<% provide(:class_text, "baseindex") %>
+<% provide(:button_text, "修正") %>
+
 <h1>拠点一覧</h1>
+<div>
+  <table class="table table-bordered table-condensed table-hover" id="base-tabel">
+    <thead>
+      <tr>
+        <th></th>
+        <th></th>
+        <th>拠点番号</th>
+        <th>拠点名</th>
+        <th>勤怠種類</th>
+      </tr>
+    </thead>
+    
+    <tbody>
+      <% @bases.each do |base| %>
+      <tr>
+        <td><%= render 'form' %></td>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
