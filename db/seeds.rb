@@ -20,4 +20,7 @@ User.create!(name: "管理者",
                uid: uid,
                password: password,
                password_confirmation: password)
+               
+Base.create!(base_id: 1,
+             base_name: "本社")
 end

@@ -28,8 +28,7 @@ ActiveRecord::Schema.define(version: 20200429010333) do
   end
 
   create_table "bases", force: :cascade do |t|
-    t.string "base_id"
-    t.string "integer"
+    t.integer "base_id"
     t.string "base_name"
     t.string "attendance_type"
     t.integer "user_id"
