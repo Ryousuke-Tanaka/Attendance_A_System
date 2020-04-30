@@ -1,6 +1,7 @@
 class BasesController < ApplicationController
   def index
     @bases = Base.all.order(id: "DESC") 
+    @base = Base.find(params[:user_id])
   end
   
   def new
@@ -11,7 +12,7 @@ class BasesController < ApplicationController
     @base = Base.new(base_params)
     if @base.save
       flash[:success] = "新規拠点登録に成功しましました。"
-      redirect_to bases_index_user_url
+      redirect_to user_bases_url
     else
       render :index
     end
@@ -20,10 +21,10 @@ class BasesController < ApplicationController
   def edit
   end
   
-  def updated
+  def update
     if @base.update_attributes(base_params)
       flash[:success] = "#{@base.base_name}のデータを編集しました。"
-      redirect_to bases url
+      redirect_to user_bases_url
     else
         render :index
     end
@@ -32,7 +33,7 @@ class BasesController < ApplicationController
   def destroy
     @base.destroy
     flash[:success] = "#{@base.base_name}のデータを削除しました。"
-    redirect_to bases_index_user_url
+    redirect_to user_bases_url
   end
   
   private
