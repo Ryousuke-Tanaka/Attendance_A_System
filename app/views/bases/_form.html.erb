@@ -1,18 +1,14 @@
-<%= form_with(model: @base, url:user_bases_path, local: true) do |f| %>
+<%= form_with(model: @base, local: true) do |f| %>
   <%= render 'shared/error_messages', model: f.object %>
+  
+    <%= f.label :base_id, class: "label-#{yield(:class_text)}" %>
+    <%= f.number_field :base_id, class: "form-control" %>
     
-  <tr>
-    <td><%= f.submit "修正", class: "btn btn-primary btn-block btn-#{yield(:class_text)}" %></td>
-        
-    <td><%= f.submit "削除", class: "btn btn-primary btn-block btn-#{yield(:class_text)}"%></td>
-        
-    <td><%= f.number_field :base_id, class: "form-control" %></td>
-            
-    <td><%= f.text_field :base_name, class: "form-control" %></td>
-        
-    <td><%= f.select :attendance_type, class: "form-control" %></td>
-  </tr>
-  <tr>
-  <td colspan="5"><%= f.submit yield(:button_text), class: "btn btn-primary btn-block btn-#{yield(:class_text)}" %></td>
-  </tr>
+    <%= f.label :base_name, class: "label-#{yield(:class_text)}" %>        
+    <%= f.text_field :base_name, class: "form-control" %>
+     
+    <%= f.label :attendance_type, class: "label-#{yield(:class_text)}" %>   
+    <%= f.select :attendance_type, class: "form-control" %>
+  
+  <%= f.submit yield(:button_text), class: "btn btn-primary btn-block btn-#{yield(:class_text)}" %>
 <% end %>
