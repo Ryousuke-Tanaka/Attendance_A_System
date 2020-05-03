@@ -36,7 +36,7 @@
         <tr>
           <td colspan="5" class="collapse-edit">
            <div class="collapse" id="collapse-edit<%= base.id %>" aria-expanded="true" style>
-              <%= form_with(model: @base, local: true) do |f| %>
+              <%= form_with(model: @base, url: basis_path(base), local: true, method: :patch) do |f| %>
                 <%= render 'shared/error_messages', model: f.object %>
                   
                 <%= f.label :base_id, class: "label-#{yield(:class_text)}" %>
