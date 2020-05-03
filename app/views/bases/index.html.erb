@@ -2,37 +2,64 @@
 <% provide(:class_text, "baseindex") %>
 <% provide(:button_text, "修正") %>
 
-<h1>拠点一覧</h1>
+<%= form_with(model: @user, url: user_bases_path, local: true, method: :patch) do |f| %>
 <div>
-  <table class="table table-bordered table-condensed table-hover" id="base-tabel">
-    <thead>
-      <tr>
-        <th></th>
-        <th></th>
-        <th>拠点番号</th>
-        <th>拠点名</th>
-        <th>勤怠種類</th>
-      </tr>
-    </thead>
-    
-    <tbody>
-      <% @bases.each do |base| %>
-      <tr>
-        <td>
-        </td>
-        <td>
-          <%= link_to "削除", base, method: :delete,
-            data: {confirm: "削除してもよろしいですか？"},
-            class: "btn  btn-block btn-primary" %>
-        </td>
-        <td><%= base.base_id %></td>
-        <td><%= base.base_name %></td>
-        <td><%= base.attendance_type %></td>
-      </tr>
-      <% end %>
-      <tr>
-        <td colspan="5"><%= link_to "拠点情報追加", yield(:button_text), class: "btn btn-primary btn-block btn-#{yield(:class_text)}" %></td>
-      </tr>
-    </tbody>
-  </table>
+  <h1>拠点一覧</h1>
+  <div>
+    <table class="table table-bordered table-condensed table-hover" id="base-tabel">
+      <thead>
+        <tr>
+          <th></th>
+          <th></th>
+          <th>拠点番号</th>
+          <th>拠点名</th>
+          <th>勤怠種類</th>
+        </tr>
+      </thead>
+      
+      <tbody>
+        <% @bases.each do |base| %>
+        <tr>
+          <td>
+            <div class="collaps">
+              <a href="#collapse-edit<%= base.id %>" data-toggle="collapse" class="btn btn-default btn-primary">修正</a>
+            </div>
+          </td>
+          <td>
+            <%= link_to "削除", user_bases_index_path, method: :delete,
+              data: {confirm: "削除してもよろしいですか？"},
+              class: "btn btn-default btn-primary" %>
+          </td>
+          <td><%= base.base_id %></td>
+          <td><%= base.base_name %></td>
+          <td><%= base.attendance_type %></td>
+        </tr>
+        <tr>
+          <td colspan="5" class="collapse-edit">
+           <div class="collapse" id="collapse-edit<%= base.id %>" aria-expanded="true" style>
+              <%= f.fields_for "bases[]", base do |b| %>
+                <%= render 'shared/error_messages', model: f.object %>
+                  
+                <%= b.label :base_id, class: "label-#{yield(:class_text)}" %>
+                <%= b.number_field :base_id, class: "form-control" %>
+                    
+                <%= b.label :base_name, class: "label-#{yield(:class_text)}" %>        
+                <%= b.text_field :base_name, class: "form-control" %>
+                     
+                <%= b.label :attendance_type, class: "label-#{yield(:class_text)}" %>   
+                <%= b.select :attendance_type, class: "form-control" %>
+                  
+                <%= b.submit yield(:button_text), class: "btn btn-primary btn-block btn-#{yield(:class_text)}" %>
+              <% end %>
+            </div>
+          </td>
+        </tr>
+        <% end %>
+        <tr>
+          <td colspan="5"><%= link_to "拠点情報追加", yield(:button_text), class: "btn  btn-lg btn-primary btn-#{yield(:class_text)}" %></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>
+<% end %>
