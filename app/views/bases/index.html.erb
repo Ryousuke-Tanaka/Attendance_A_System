@@ -2,7 +2,6 @@
 <% provide(:class_text, "baseindex") %>
 <% provide(:button_text, "修正") %>
 
-<%= form_with(model: @user, url: user_bases_path, local: true, method: :patch) do |f| %>
 <div>
   <h1>拠点一覧</h1>
   <div>
@@ -26,7 +25,7 @@
             </div>
           </td>
           <td>
-            <%= link_to "削除", user_bases_index_path, method: :delete,
+            <%= link_to "削除", base, method: :delete,
               data: {confirm: "削除してもよろしいですか？"},
               class: "btn btn-default btn-primary" %>
           </td>
@@ -37,29 +36,52 @@
         <tr>
           <td colspan="5" class="collapse-edit">
            <div class="collapse" id="collapse-edit<%= base.id %>" aria-expanded="true" style>
-              <%= f.fields_for "bases[]", base do |b| %>
+              <%= form_with(model: @base, local: true) do |f| %>
                 <%= render 'shared/error_messages', model: f.object %>
                   
-                <%= b.label :base_id, class: "label-#{yield(:class_text)}" %>
-                <%= b.number_field :base_id, class: "form-control" %>
+                <%= f.label :base_id, class: "label-#{yield(:class_text)}" %>
+                <%= f.number_field :base_id, class: "form-control" %>
                     
-                <%= b.label :base_name, class: "label-#{yield(:class_text)}" %>        
-                <%= b.text_field :base_name, class: "form-control" %>
+                <%= f.label :base_name, class: "label-#{yield(:class_text)}" %>        
+                <%= f.text_field :base_name, class: "form-control" %>
                      
-                <%= b.label :attendance_type, class: "label-#{yield(:class_text)}" %>   
-                <%= b.select :attendance_type, class: "form-control" %>
+                <%= f.label :attendance_type, class: "label-#{yield(:class_text)}" %>   
+                <%= f.select :attendance_type, ["出勤", "退勤"], { include_blank: true }, class: "form-control" %>
                   
-                <%= b.submit yield(:button_text), class: "btn btn-primary btn-block btn-#{yield(:class_text)}" %>
+                <%= f.submit yield(:button_text), class: "btn btn-primary btn-block btn-#{yield(:class_text)}" %>
               <% end %>
             </div>
           </td>
         </tr>
         <% end %>
         <tr>
-          <td colspan="5"><%= link_to "拠点情報追加", yield(:button_text), class: "btn  btn-lg btn-primary btn-#{yield(:class_text)}" %></td>
+          <td>
+            <div class="collaps">
+              <a href="#collapse-new" data-toggle="collapse" class="btn btn-default btn-primary">拠点情報追加</a>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="5" class="collapse-new">
+            <div class="collapse" id="collapse-new" aria-expanded="true" style>
+              <%= form_with(model: @base, local: true) do |f| %>
+                <%= render 'shared/error_messages', model: f.object %>
+                  
+                <%= f.label :base_id, class: "label-#{yield(:class_text)}" %>
+                <%= f.number_field :base_id, class: "form-control" %>
+                    
+                <%= f.label :base_name, class: "label-#{yield(:class_text)}" %>        
+                <%= f.text_field :base_name, class: "form-control" %>
+                     
+                <%= f.label :attendance_type, class: "label-#{yield(:class_text)}" %>   
+                <%= f.select :attendance_type, ["出勤", "退勤"], { include_blank: true }, class: "form-control" %>
+                  
+                <%= f.submit "拠点情報追加", class: "btn btn-lg btn-primary btn-#{yield(:class_text)}" %>
+              <% end %>
+            </div>
+          </td>
         </tr>
       </tbody>
     </table>
   </div>
 </div>
-<% end %>

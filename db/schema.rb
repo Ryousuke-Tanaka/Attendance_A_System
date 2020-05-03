@@ -31,31 +31,27 @@ ActiveRecord::Schema.define(version: 20200429010333) do
     t.integer "base_id"
     t.string "base_name"
     t.string "attendance_type"
-    t.integer "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["base_id", "user_id"], name: "index_bases_on_base_id_and_user_id", unique: true
-    t.index ["user_id"], name: "index_bases_on_user_id"
+    t.index ["base_id"], name: "index_bases_on_base_id", unique: true
   end
 
   create_table "users", force: :cascade do |t|
     t.string "name"
     t.string "email"
-    t.integer "base_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "password_digest"
     t.string "remember_digest"
     t.boolean "admin", default: false
     t.string "affiliation", default: "未所属"
-    t.datetime "basic_time", default: "2020-04-29 23:00:00"
-    t.datetime "work_time", default: "2020-04-29 22:30:00"
-    t.datetime "designated_work_start_time", default: "2020-04-30 00:00:00"
-    t.datetime "designated_work_end_time", default: "2020-04-30 09:00:00"
+    t.datetime "basic_time", default: "2020-05-02 23:00:00"
+    t.datetime "work_time", default: "2020-05-02 22:30:00"
+    t.datetime "designated_work_start_time", default: "2020-05-03 00:00:00"
+    t.datetime "designated_work_end_time", default: "2020-05-03 09:00:00"
     t.boolean "superior", default: false
     t.integer "employee_number"
     t.integer "uid"
-    t.index ["base_id"], name: "index_users_on_base_id"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["employee_number"], name: "index_users_on_employee_number", unique: true
     t.index ["uid"], name: "index_users_on_uid", unique: true

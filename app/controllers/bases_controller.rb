@@ -1,6 +1,6 @@
 class BasesController < ApplicationController
-  before_action :set_user_id
   before_action :set_base, only: [:edit, :update, :destroy]
+  before_action :logged_in_user
   before_action :admin_user
   
   def index
@@ -17,7 +17,7 @@ class BasesController < ApplicationController
     @base = Base.new(base_params)
     if @base.save
       flash[:success] = "新規拠点登録に成功しましました。"
-      redirect_to user_bases_url
+      redirect_to bases_url
     else
       render :index
     end
@@ -29,7 +29,7 @@ class BasesController < ApplicationController
   def update
     if @base.update_attributes(base_params)
       flash[:success] = "#{@base.base_name}のデータを編集しました。"
-      redirect_to user_bases_index_url
+      redirect_to bases_url
     else
         render :index
     end
@@ -38,20 +38,16 @@ class BasesController < ApplicationController
   def destroy
     @base.destroy
     flash[:success] = "#{@base.base_name}のデータを削除しました。"
-    redirect_to buser_bases_index_url
+    redirect_to bases_url
   end
   
   private
     
     def base_params
-      params.require(:user).permit(bases: [:base_id, :base_name, :attendance_type])[:bases]
+      params.require(:base).permit(:base_id, :base_name, :attendance_type)
     end
     
     # beforeアクション
-    
-    def set_user_id
-      @user = User.find(params[:user_id])
-    end
     
     def set_base
       @base = Base.find(params[:id])
