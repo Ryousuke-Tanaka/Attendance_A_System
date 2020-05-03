@@ -8,10 +8,6 @@ class BasesController < ApplicationController
     @base = Base.new
   end
   
-  def new
-    @base = Base.new
-  end
-  
   def create
     @bases = Base.all.order(base_id: "ASC")
     @base = Base.new(base_params)

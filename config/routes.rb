@@ -8,7 +8,7 @@ Rails.application.routes.draw do
   delete '/logout', to: 'sessions#destroy'
   
   # 拠点情報
-  resources :bases, except: :show
+  resources :bases, except: [:show, :new]
   
   resources :users do
     member do
