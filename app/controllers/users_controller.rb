@@ -68,7 +68,18 @@ class UsersController < ApplicationController
       @users = User.paginate(page: params[:page], per_page: 20 )
       flash.now[:danger] = "該当ユーザーはいませんでした。"
     end
-    render "index"
+    render :index
+  end
+  
+  def import
+    if params[:file].blank?
+      flash[:danger] = "インポートするCSVファイルを選択してください。"
+      redirect_to users_url
+    else
+      User.import(params[:file])
+      flash[:success] = "CSVファイルをインポートしました。"
+      redirect_to use_url
+    end
   end
   
   private

@@ -11,6 +11,8 @@ Rails.application.routes.draw do
   resources :bases, except: [:show, :new]
   
   resources :users do
+    collection {post :import}
+    get 'import', to: 'users#import'
     member do
       get 'search'
       get 'edit_basic_info'
