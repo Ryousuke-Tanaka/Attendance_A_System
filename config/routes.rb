@@ -11,11 +11,12 @@ Rails.application.routes.draw do
   resources :bases, except: [:show, :new]
   
   resources :users do
-    collection {post :import}
-    get 'import', to: 'users#import'
+    collection { post :import }
+    get 'import'
     member do
       get 'search'
       get 'edit_basic_info'
+      patch 'update_user_info'
       patch 'update_basic_info'
       get 'attendances/edit_one_month'
       patch 'attendances/update_one_month'
