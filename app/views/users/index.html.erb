@@ -7,7 +7,8 @@
     <div class="col-md-4 col-md-offset-1 csv-group">
       <%= form_tag import_users_path, method: :post, multipart: true do %>
          <div class="search_item">
-            <%= file_field_tag "ファイルを選択", class: %i(csv_input_btn), type: 'button', onclick: "$('#file_input').click();", class: "form-control" %>
+            <%= button_tag "ファイルを選択", class: %i(csv_input_btn), type: 'button', onclick: "$('#file_input').click();" %>
+            <%= text_field_tag 'filename',"", id: "filename", disabled: true, class: "form-control" %>
             <%= file_field_tag :file, id: "file_input", style: "display: none;", onchange: "file_selected($(this));" %>
           </div>
             <%= submit_tag "CSVをインポート", class: "btn btn-primary form-control btn-csv" %>
@@ -15,6 +16,13 @@
       <div>
     </div>
   </div>
+  
+  <script type="text/javascript">
+    function file_selected(file_field){
+      var filename = $(file_field)[0].files[0].name;
+      $("#filename").val(filename);
+    }
+  </script>
     
     <div class="col-md-4 col-md-offset-2" id="search-users">
       <p>ユーザー名検索</p>
