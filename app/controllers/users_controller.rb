@@ -22,13 +22,19 @@ class UsersController < ApplicationController
   end
   
   def create
-    @user = User.new(user_params)
-    if @user.save
-      log_in @user # 保存成功後、ログインする
-      flash[:success] = "新規作成に成功しました。"
-      redirect_to @user
+    if current_user.admin?
+      registered_count = import_users
+      flash[:success] = "#{registered_count}件登録しました"
+      redirect_to users_url
     else
-      render :new
+      @user = User.new(user_params)
+      if @user.save
+        log_in @user # 保存成功後、ログインする
+        flash[:success] = "新規作成に成功しました。"
+        redirect_to @user
+      else
+        render :new
+      end
     end
   end
   
@@ -108,4 +114,5 @@ class UsersController < ApplicationController
    def basic_info_params
       params.require(:user).permit(:department, :basic_time, :work_time)
    end
+   
 end
