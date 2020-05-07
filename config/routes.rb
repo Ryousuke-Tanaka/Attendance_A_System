@@ -16,6 +16,7 @@ Rails.application.routes.draw do
     member do
       get 'search'
       get 'edit_basic_info'
+      get 'working_employee'
       patch 'update_user_info'
       patch 'update_basic_info'
       get 'attendances/edit_one_month'

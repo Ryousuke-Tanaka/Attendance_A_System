@@ -2,7 +2,7 @@ class UsersController < ApplicationController
   before_action :set_user, only: [:show, :edit, :update, :destroy, :update_user_info, :edit_basic_info, :update_basic_info]
   before_action :logged_in_user, only: [:show, :index, :show, :edit, :update, :destroy, :edit_basic_info, :update_basic_info]
   before_action :correct_user, only: [:edit, :update]
-  before_action :admin_user, only: [:index, :destroy, :update_user_info, :edit_basic_info, :update_basic_info]
+  before_action :admin_user, only: [:index, :destroy, :update_user_info, :edit_basic_info, :update_basic_info, :working_employee]
   before_action :set_one_month, only: :show
   
   def index
@@ -22,19 +22,13 @@ class UsersController < ApplicationController
   end
   
   def create
-    if current_user.admin?
-      registered_count = import_users
-      flash[:success] = "#{registered_count}件登録しました"
-      redirect_to users_url
+    @user = User.new(user_params)
+    if @user.save
+      log_in @user # 保存成功後、ログインする
+      flash[:success] = "新規作成に成功しました。"
+      redirect_to @user
     else
-      @user = User.new(user_params)
-      if @user.save
-        log_in @user # 保存成功後、ログインする
-        flash[:success] = "新規作成に成功しました。"
-        redirect_to @user
-      else
-        render :new
-      end
+      render :new
     end
   end
   
@@ -97,6 +91,14 @@ class UsersController < ApplicationController
       User.import(params[:file])
       flash[:success] = "CSVファイルをインポートしました。"
       redirect_to users_url
+    end
+  end
+  
+  def working_employee
+    Attendance.where.not(started_at: nil).each do |attendance|
+      if (Date.current == attendance.worked_on) && attendance.finished_at.nil?
+        @working_users = User.all.includes(:attendances)
+      end
     end
   end
   
