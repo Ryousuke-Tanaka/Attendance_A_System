@@ -35,6 +35,7 @@ class UsersController < ApplicationController
   def edit
   end
   
+  # 各ユーザーからの更新
   def update
     if @user.update_attributes(user_params)
       flash[:success] = "ユーザー情報を更新しました。"
@@ -50,6 +51,7 @@ class UsersController < ApplicationController
     redirect_to users_url
   end
   
+  # CSVファイルからの更新
   def update_user_info
     if @user.update_attributes(user_info_params)
       flash[:success] = "#{@user.name}のデータを更新しました。"
