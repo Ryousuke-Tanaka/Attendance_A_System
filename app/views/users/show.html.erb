@@ -82,7 +82,7 @@
           end
         %>
         <tr>
-          <td><%= link_to "残業申請", "#", class: "btn btn-default btn-primary" %></td>
+          <td><%= link_to "残業申請", edit_overtime_user_path(@user), remote: true, class: "btn btn-default btn-primary" %></td>
           <td><%= l(day.worked_on, format: :short) %></td>
           <td class="<%= day_of_week_color %>"><%= $days_of_the_week[day.worked_on.wday] %></td>
           <td><%= day.started_at.hour if day.started_at.present? %></td>
@@ -141,3 +141,6 @@
     </tfoot>
   </table>
 </div>
+
+<!-- モーダルウィンドウ表示 -->
+<div id="edit-overtime" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>

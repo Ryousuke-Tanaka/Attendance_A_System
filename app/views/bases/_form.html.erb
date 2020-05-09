@@ -1,5 +1,5 @@
 <%= f.fields_for "bases[]", base do |b| %>
-  <%= render 'shared/error_messages', model: f.object %>
+  <%= render 'shared/object_error_messages', model: f.object %>
   
     <%= b.label :base_id, class: "label-#{yield(:class_text)}" %>
     <%= b.number_field :base_id, class: "form-control" %>
