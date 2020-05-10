@@ -13,8 +13,13 @@ class UsersController < ApplicationController
   end
   
   def show
-   @worked_sum = @attendances.where.not(started_at: nil).count
-   @superiors = User.all.where(superior: true)
+    @worked_sum = @attendances.where.not(started_at: nil).count
+    @superiors = User.all.where(superior: true)
+    respond_to do |format|
+      format.csv do
+        send_data render_to_string, filename: "#{@user.name}()勤怠情報.csv", type: :csv
+      end
+    end
   end
   
   def new
@@ -51,7 +56,7 @@ class UsersController < ApplicationController
     redirect_to users_url
   end
   
-  # CSVファイルからの更新
+  # 管理者によるユーザー情報更新
   def update_user_info
     if @user.update_attributes(user_info_params)
       flash[:success] = "#{@user.name}のデータを更新しました。"

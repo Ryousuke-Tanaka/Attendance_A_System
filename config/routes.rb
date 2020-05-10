@@ -18,13 +18,17 @@ Rails.application.routes.draw do
       get 'working_employee'
       get 'edit_basic_info'
       patch 'update_basic_info'
-      get 'edit_overtime'
-      patch 'update_overtime'
       patch 'update_user_info'
       get 'attendances/edit_one_month'
       patch 'attendances/update_one_month'
     end
-    resources :attendances, only: :update
+    resources :attendances do
+      patch 'update'
+      member do
+        get 'request_overtime'
+        patch 'update_overtime'
+      end
+    end
   end
   
 end

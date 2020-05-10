@@ -1,8 +1,9 @@
 class AttendancesController < ApplicationController
-  before_action :set_user, only: [:edit_one_month, :update_one_month]
-  before_action :logged_in_user, only: [:update, :edit_one_month]
+  before_action :set_user, only: [:edit_one_month, :update_one_month, :request_overtime]
+  before_action :logged_in_user, only: [:update, :edit_one_month, :request_overtime]
+  before_action :correct_user, only: [:request_overtime]
   before_action :admin_or_correct_user, only: [:update, :edit_one_month]
-  before_action :set_one_month, only: :edit_one_month
+  before_action :set_one_month, only: [:edit_one_month, :request_overtime]
   
   UPDATE_ERROR_MSG = "勤怠登録に失敗しました。やり直してください。"
 
@@ -43,10 +44,22 @@ class AttendancesController < ApplicationController
     redirect_to attendances_edit_one_month_user_url(date: params[:date])
   end
   
+  def request_overtime
+    @attendance = Attendance.find(params[:id])
+    if @attendance.update_attributes(overtime_info_params)
+      flash[:success] = "残業を申請しました。"
+    end
+  end
+  
+  
   private
   
     # 1ヶ月分の勤怠情報を扱う
     def attendances_params
       params.require(:user).permit(attendances: [:started_at, :finished_at, :note, :spread_day])[:attendances]
+    end
+    
+    def overtime_info_params
+      params.require(:user).permit(attendances: [:estimated_finished_time, :spread_day, :job_description, :boss])[:attendances]
     end
 end

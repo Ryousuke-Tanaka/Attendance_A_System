@@ -53,7 +53,7 @@ class User < ApplicationRecord
     update_attribute(:remember_digest, nil)
   end
   
-  # importメソッド
+  # CSVファイルのimportメソッド
   def self.import(file)
     CSV.foreach(file.path, encoding: 'Shift_JIS:UTF-8', headers: true) do |row|
       # emailが見つかれば、レコードを呼び出し、見つからなければ新規作成
@@ -70,4 +70,5 @@ class User < ApplicationRecord
     ["id", "name", "email", "affiliation", "employee_number", "uid", "password", "password_confirmation",
       "superior", "admin", "basic_time", "designated_work_start_time", "designated_work_end_time"]
   end
+  
 end
