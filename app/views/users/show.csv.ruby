@@ -1,6 +1,6 @@
 require 'csv'
 
-CSV.generate do |csv|
+csv1 = CSV.generate do |csv|
   column_names = %w(worked_on "曜日" started_at finished_at "在社時間")
   csv << column_names
   @attendances.each do |day|

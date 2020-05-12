@@ -15,11 +15,7 @@ class UsersController < ApplicationController
   def show
     @worked_sum = @attendances.where.not(started_at: nil).count
     @superiors = User.all.where(superior: true)
-    respond_to do |format|
-      format.csv do
-        send_data render_to_string, filename: "#{@user.name}()勤怠情報.csv", type: :csv
-      end
-    end
+    send_data render_to_string, filename: "#{@user.name}().csv", type: :csv
   end
   
   def new
