@@ -4,23 +4,27 @@
 
 <div class="container">
   <table class="table table-bordered table-condensed table-hover table-striped" id="table-working_employees">
-    <thead>
-      <tr>
-       <th>社員番号</th>
-       <th>名前</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @working_users.each do |user| %>
-        <% user.attendances.each do |attendance| %>
-           <% if (Date.current == attendance.worked_on) && attendance.started_at != nil && attendance.finished_at == nil %>
+    <% if @working_users.nil? %>
+      <h1>現在出勤中の社員はいません。</h1>
+    <% else %>
+      <thead>
         <tr>
-          <td><%= user.employee_number %></td>
-          <td><%= user.name %></td>
+         <th>社員番号</th>
+         <th>名前</th>
         </tr>
+      </thead>
+      <tbody>
+        <% @working_users.each do |user| %>
+          <% user.attendances.each do |attendance| %>
+             <% if (Date.current == attendance.worked_on) && attendance.started_at != nil && attendance.finished_at == nil %>
+          <tr>
+            <td><%= user.employee_number %></td>
+            <td><%= user.name %></td>
+          </tr>
+            <% end %>
           <% end %>
         <% end %>
-      <% end %>
-    </tbody>
+      </tbody>
+    <% end %>
   </table>
 </div>
