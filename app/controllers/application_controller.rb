@@ -45,6 +45,14 @@ class ApplicationController < ActionController::Base
     end
   end
   
+  # 管理者でないことを判定
+  def not_admin_user
+    if current_user.admin?
+      flash[:danger] = "管理者は閲覧できません。"
+      redirect_to root_url
+    end
+  end
+  
   # ページ出力前に1ヶ月分のデータの存在を確認・セット
   def set_one_month 
     @first_day = params[:date].nil? ?

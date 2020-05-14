@@ -4,6 +4,7 @@ class UsersController < ApplicationController
   before_action :correct_user, only: [:edit, :update]
   before_action :admin_user, only: [:index, :destroy, :update_user_info, :edit_basic_info, :update_basic_info, :working_employee]
   before_action :set_one_month, only: :show
+  before_action :not_admin_user, only: :show
   
   def index
     @users = User.paginate(page: params[:page], per_page: 20 )
@@ -15,7 +16,11 @@ class UsersController < ApplicationController
   def show
     @worked_sum = @attendances.where.not(started_at: nil).count
     @superiors = User.all.where(superior: true)
-    send_data render_to_string, filename: "#{@user.name}().csv", type: :csv
+    respond_to do |format|
+      format.html
+      format.csv
+      send_data render_to_string, filename: "#{@user.name}().csv", type: :csv
+    end
   end
   
   def new
