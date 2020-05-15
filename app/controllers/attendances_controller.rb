@@ -1,7 +1,7 @@
 class AttendancesController < ApplicationController
   before_action :set_user, only: [:edit_one_month, :update_one_month, :request_overtime, :update_overtime]
-  before_action :logged_in_user, only: [:update, :edit_one_month, :request_overtime]
-  before_action :correct_user, only: [:request_overtime, :update_overtime]
+  before_action :logged_in_user, only: [:update, :edit_one_month, :request_overtime, :update_overtime]
+  before_action :correct_user, only: [:request_overtime, :update_overtime, :update_overtime]
   before_action :admin_or_correct_user, only: [:update, :edit_one_month]
   before_action :set_one_month, only: [:edit_one_month, :request_overtime]
   
@@ -65,6 +65,6 @@ class AttendancesController < ApplicationController
     end
     
     def overtime_info_params
-      params.require(:user).permit(attendances: [:estimated_finished_time, :spread_day, :job_description, :boss])[:attendances]
+      params.permit(attendances: [:estimated_finished_time, :spread_day, :job_description, :boss])[:attendances]
     end
 end

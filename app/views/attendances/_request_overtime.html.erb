@@ -41,7 +41,7 @@
                   <th><%= f.time_field :finish_time, class: "form-control" %></th>
                   <th><%= f.check_box :spread_day, id: "remember_me" %></th>
                   <th><%= f.text_field :job_description, placeholder: "業務内容を入力してください。", class: "form-control" %></th>
-                  <th><%= f.collection_select :id, User.where(superior: true), :id, :name, :include_blank => "選択してください。" %></th>
+                  <th><%= f.collection_select :id, User.where(superior: true), :id, :name, :include_blank => "選択してください。", class: "form-control" %></th>
                 </tr>
                 <% end %>
               <% end %>
