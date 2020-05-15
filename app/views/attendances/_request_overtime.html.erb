@@ -23,15 +23,6 @@
                 <th>業務内容</th>
                 <th>指示者確認㊞</th>
               </tr>
-            </thead>
-              <% css_class
-                day_of_week_color = case $days_of_the_week[day.worked_on.wday]
-                when "土"
-                  "text-primary"
-                when "日"
-                  "text-danger"
-                end
-              %>
                 
                 <tbody>
                   <% @attendances.each do |day| %>
@@ -43,16 +34,19 @@
                         "text-danger"
                       end
                     %>
-                  <%= f.fields_for "attendances[]", day do |attendance| %>
-                  <tr>
-                    <th><%= l(@attendance.worked_on, format: :short) %></th>
-                    <th class="<%= css_class %>"><%= $days_of_the_week[@attendance.worked_on.wday]%></th>
-                    <th><%= f.time_field :finish_time, class: "form-control" %></th>
-                    <th><%= f.check_box :spread_day, id: "remember_me" %></th>
-                    <th><%= f.text_field :job_description, class: "form-control" %></th>
-                    <th><%= f.select :boss, [["選択してください"],["上長A"],["上長B"]]%></th>
-                  </tr>
+                    <%= f.fields_for "attendances[]", day do |attendance| %>
+                    <tr>
+                      <th><%= l(@attendance.worked_on, format: :short) %></th>
+                      <th class="<%= day_of_week_color %>"><%= $days_of_the_week[@attendance.worked_on.wday]%></th>
+                      <th><%= f.time_field :finish_time, class: "form-control" %></th>
+                      <th><%= f.check_box :spread_day, id: "remember_me" %></th>
+                      <th><%= f.text_field :job_description, placeholder: "業務内容を入力してください。", class: "form-control" %></th>
+                      <th><%= f.collection_select :id, User.where(superior: true), :id, :name, :include_blank => "選択してください。" %></th>
+                    </tr>
+                    <% end %>
+                  <% end %>
                 </tbody>
+                  
             
               <table class="center">
                 <%= f.submit yield(:button_text), class: "btn btn-block btn-primary btn-#{yield(:class_text)}" %>
