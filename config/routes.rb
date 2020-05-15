@@ -14,6 +14,7 @@ Rails.application.routes.draw do
     collection { post :import }
     get 'import'
     member do
+      get 'export'
       get 'search'
       get 'working_employee'
       get 'edit_basic_info'
@@ -21,14 +22,11 @@ Rails.application.routes.draw do
       patch 'update_user_info'
       get 'attendances/edit_one_month'
       patch 'attendances/update_one_month'
+      get 'attendances/request_overtime'
+      patch 'attendances/update_overtime'
     end
-    resources :attendances do
-      patch 'update'
-      member do
-        get 'request_overtime'
-        patch 'update_overtime'
-      end
-    end
+    resources :attendances, only: :update
   end
-  
 end
+  
+

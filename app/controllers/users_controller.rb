@@ -1,9 +1,9 @@
 class UsersController < ApplicationController
-  before_action :set_user, only: [:show, :edit, :update, :destroy, :update_user_info, :edit_basic_info, :update_basic_info]
-  before_action :logged_in_user, only: [:show, :index, :show, :edit, :update, :destroy, :edit_basic_info, :update_basic_info]
-  before_action :correct_user, only: [:edit, :update]
+  before_action :set_user, only: [:show, :edit, :update, :destroy, :update_user_info, :edit_basic_info, :update_basic_info, :export]
+  before_action :logged_in_user, only: [:show, :index, :show, :edit, :update, :destroy, :edit_basic_info, :update_basic_info, :export]
+  before_action :correct_user, only: [:edit, :update, :export]
   before_action :admin_user, only: [:index, :destroy, :update_user_info, :edit_basic_info, :update_basic_info, :working_employee]
-  before_action :set_one_month, only: :show
+  before_action :set_one_month, only: [:show, :export]
   before_action :not_admin_user, only: :show
   
   def index
@@ -16,11 +16,6 @@ class UsersController < ApplicationController
   def show
     @worked_sum = @attendances.where.not(started_at: nil).count
     @superiors = User.all.where(superior: true)
-    respond_to do |format|
-      format.html
-      format.csv
-      send_data render_to_string, filename: "#{@user.name}().csv", type: :csv
-    end
   end
   
   def new
@@ -99,6 +94,15 @@ class UsersController < ApplicationController
       User.import(params[:file])
       flash[:success] = "CSVファイルをインポートしました。"
       redirect_to users_url
+    end
+  end
+  
+  def export
+    @worked_sum = @attendances.where.not(started_at: nil).count
+    respond_to do |format|
+      format.csv do
+        send_data render_to_string, filename: "#{@user.name}().csv", type: :csv
+      end
     end
   end
   
