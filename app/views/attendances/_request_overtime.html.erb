@@ -48,9 +48,14 @@
                 </tbody>
                   
             
-              <table class="center">
-                <%= f.submit yield(:button_text), class: "btn btn-block btn-primary btn-#{yield(:class_text)}" %>
-              </table>
+              <table>
+                <div class="footer-button">
+                  <%= f.submit yield(:button_text), class: "btn btn-primary btn-#{yield(:class_text)}" %>
+                  <button type="button" class="btn btn-primary btn-<%= yield(:class_text) %>" data-dismiss="modal">
+                    キャンセル
+                </button>
+              </div>
+            </table>
           </table>
         <% end %>
       </div>
