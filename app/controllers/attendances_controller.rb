@@ -45,8 +45,8 @@ class AttendancesController < ApplicationController
   end
   
   def request_overtime
-    @attendances = @user.attendances.where(worked_on: params[:date])
-    @attendance = Attendance.find_by(params[:date])
+    @attendance = Attendance.find_by(worked_on: params[:date])
+    @attendances = @user.attendances.where(worked_on: @attendance.worked_on)
   end
   
   def update_overtime
