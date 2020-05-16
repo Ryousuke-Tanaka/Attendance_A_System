@@ -66,6 +66,6 @@ class AttendancesController < ApplicationController
     
     # 残業申請時のストロングパラメータ
     def overtime_info_params
-      params.require(:attendance).permit(attendances: [:estimated_finished_time, :spread_day, :job_description, :boss])[:attendances]
+      params.require(:user).permit(attendances: [:estimated_finished_time, :spread_day, :job_description, :boss])[:attendances]
     end
 end
