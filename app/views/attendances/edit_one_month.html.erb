@@ -43,7 +43,7 @@
                 <% end %>
               </td>
               <td><%= attendance.text_field :note, placeholder: "理由を入力してください。", class: "form-control" %></td>
-              <td><%= attendance.collection_select :id, User.where(superior: true), :id, :name, :include_blank => "選択してください。" %>
+              <td><%= attendance.collection_select :id, User.where(superior: true), :id, :name, {:include_blank => "選択してください。"}, {class: "form-control"} %>
               </td>
             </tr>
           <% end %>

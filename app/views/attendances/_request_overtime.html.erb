@@ -11,7 +11,7 @@
       <h1 class="modal-title">残業申請</h1>
     </div>
     <div class="modal-body">
-      <%= form_with(model: @attendance, url: attendances_update_overtime_user_path(@attendance), local: true, method: :patch) do |f| %>
+      <%= form_with(model: @attendance, url: attendances_update_overtime_user_path(date: @attendance.worked_on), local: true, method: :patch) do |f| %>
         <table class="table table-bordered">
             
           <thead>
@@ -38,7 +38,7 @@
                 <tr>
                   <th><%= l(@attendance.worked_on, format: :short) %></th>
                   <th class="<%= day_of_week_color %>"><%= $days_of_the_week[@attendance.worked_on.wday]%></th>
-                  <th><%= f.time_field :finish_time, class: "form-control" %></th>
+                  <th><%= f.time_field :estimated_finished_time, class: "form-control" %></th>
                   <th><%= f.check_box :spread_day, id: "remember_me" %></th>
                   <th><%= f.text_field :job_description, placeholder: "業務内容を入力してください。", class: "form-control" %></th>
                   <th><%= f.collection_select :id, User.where(superior: true), :id, :name, {:include_blank => "選択してください。"}, {class: "form-control"} %></th>
