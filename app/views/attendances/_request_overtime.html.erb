@@ -41,7 +41,7 @@
                   <th><%= attendance.time_field :estimated_finished_time, class: "form-control" %></th>
                   <th><%= attendance.check_box :spread_day, id: "remember_me" %></th>
                   <th><%= attendance.text_field :job_description, placeholder: "業務内容を入力してください。", class: "form-control" %></th>
-                  <th><%= attendance.collection_select :boss, User.where(superior: true), :id, :name, {:include_blank => "選択してください。"}, {class: "form-control"} %></th>
+                  <th><%= attendance.collection_select :boss, User.where(superior: true), :name, :name, {:include_blank => "選択してください。"}, {class: "form-control"} %></th>
                 </tr>
                 <% end %>
               <% end %>
