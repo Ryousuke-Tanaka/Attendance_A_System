@@ -5,7 +5,7 @@
 <div>
   <h1>拠点一覧</h1>
   <div>
-    <table class="table table-bordered table-condensed table-hover" id="base-tabel">
+    <table class="table table-bordered table-condensed table-hover" id="base_table">
       <thead>
         <tr>
           <th></th>
@@ -29,9 +29,11 @@
               data: {confirm: "削除してもよろしいですか？"},
               class: "btn btn-default btn-primary" %>
           </td>
-          <td><%= base.base_id %></td>
-          <td><%= base.base_name %></td>
-          <td><%= base.attendance_type %></td>
+          <div class="base-contents">
+            <td><%= base.base_id %></td>
+            <td><%= base.base_name %></td>
+            <td><%= base.attendance_type %></td>
+          </div>
         </tr>
         <tr>
           <td colspan="5" class="collapse-edit">
