@@ -36,15 +36,14 @@
                 <td><%= attendance.time_field :started_at, class: "form-control" %></td>
                 <td><%= attendance.time_field :finished_at, class: "form-control" %></td>
               <% end %>
-              <td><%= attendance.check_box :spread_day, :as => :boolean %></td>
+              <td><%= attendance.check_box :spread_day, :as => :boolean if Date.current >= day.worked_on %></td>
               <td>
                 <% if day.started_at.present? && day.finished_at.present? %>
                   <%= working_times(day.started_at, day.finished_at, day.spread_day) %>
                 <% end %>
               </td>
-              <td><%= attendance.text_field :note, placeholder: "理由を入力してください。", class: "form-control" %></td>
-              <td><%= attendance.collection_select :boss, User.where(superior: true), :name, :name, {:include_blank => "選択してください。"}, {class: "form-control"} %>
-              </td>
+              <td><%= attendance.text_field :note, placeholder: "変更理由を入力してください。", class: "form-control" if Date.current >= day.worked_on %></td>
+              <td><%= attendance.collection_select :boss, User.where(superior: true), :name, :name, {:include_blank => "選択してください。"}, {class: "form-control"} if Date.current >= day.worked_on %></td>
             </tr>
           <% end %>
         <% end %>
