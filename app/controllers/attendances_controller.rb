@@ -50,10 +50,18 @@ class AttendancesController < ApplicationController
   end
   
   def update_overtime
-    @attendance = Attendance.find(params[:id])
-    if @attendance.update_attributes(overtime_info_params)
-      flash[:success] = "残業を申請しました。"
+    @attendance = Attendance.find_by(worked_on: params[:date])
+    ActiveRecord::Base.transaction do
+      overtime_info_params.each do |id, item|
+        overtime = Attendance.find(id)
+        overtime.update_attributes!(item)
+      end
     end
+    flash[:success] = "残業申請をしました。"
+    redirect_to user_url(date: params[:date])
+  rescue ActiveRecord::RecordInvalid
+    flash[:danger] = "無効な入力があった為、更新をキャンセルしました。"
+    redirect_to attendances_edit_one_month_user_url(date: params[:date])
   end
   
   
