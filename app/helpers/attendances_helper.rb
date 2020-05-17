@@ -27,17 +27,18 @@ module AttendancesHelper
   end
   
   # 残業時間を計算
-  def overtime_calculation(finished_at, spread_day, designated_work_end_time)
+  def overtime_calculation(estimated_finished_time, spread_day, designated_work_end_time)
+    estimated_finished_time = estimated_finished_time.round_to(15.minutes)
     @attendance = Attendance.find(params[:id])
     @attendance.spread_day = spread_day
     if @attendance.spread_day
-      format("%.2f",(((finished_at - designated_work_end_time) / 60) / 60.0))
+      format("%.2f",(((estimated_finished_time - designated_work_end_time) / 60) / 60.0) + 24)
     else
-      if (finished_at - designated_work_end_time) < 0
+      if (estimated_finished_time - designated_work_end_time) < 0
         flash[:danger] = "残業時間がマイナスです。"
-        redirect_to user_url
+        format("%.2f",(((estimated_finished_time - designated_work_end_time) / 60) / 60.0))      
       else
-        format("%.2f",(((finished_at - designated_work_end_time) / 60) / 60.0) - 24)
+        format("%.2f",(((estimated_finished_time - designated_work_end_time) / 60) / 60.0))
       end
     end
   end

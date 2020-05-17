@@ -106,7 +106,7 @@
           <td><%= set_minutes(day.estimated_finished_time) if day.estimated_finished_time.present? %></td>
           <td>
             <% if day.started_at.present? && day.finished_at.present? &&  day.estimated_finished_time.present? %>
-              <%= overtime_calculation(day.finished_at, day.spread_day, @user.designated_work_end_time) %>
+              <%= overtime_calculation(day.estimated_finished_time, day.spread_day, @user.designated_work_end_time) %>
             <% end %>
           </td>
           <td><%= day.job_description %></td>
