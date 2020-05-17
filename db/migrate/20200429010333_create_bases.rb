@@ -2,7 +2,7 @@ class CreateBases < ActiveRecord::Migration[5.1]
   def change
     create_table :bases do |t|
       t.integer :base_id, unique: true, auto_increment: true
-      t.string :base_name
+      t.string :base_name, unique: true
       t.string :attendance_type
 
       t.timestamps

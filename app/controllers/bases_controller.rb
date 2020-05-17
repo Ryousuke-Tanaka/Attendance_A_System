@@ -27,7 +27,8 @@ class BasesController < ApplicationController
       flash[:success] = "#{@base.base_name}のデータを編集しました。"
       redirect_to bases_url
     else
-        render :index
+      flash[:danger] = "拠点番号、拠点名は必須項目です。"
+      redirect_to bases_url
     end
   end
   
