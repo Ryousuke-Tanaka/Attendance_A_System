@@ -5,6 +5,7 @@ class UsersController < ApplicationController
   before_action :admin_user, only: [:index, :destroy, :update_user_info, :edit_basic_info, :update_basic_info, :working_employee]
   before_action :set_one_month, only: [:show, :export]
   before_action :not_admin_user, only: :show
+  before_action :select_superiors, only: :show
   
   def index
     @users = User.paginate(page: params[:page], per_page: 20 )
@@ -15,7 +16,6 @@ class UsersController < ApplicationController
   
   def show
     @worked_sum = @attendances.where.not(started_at: nil).count
-    @superiors = User.all.where(superior: true)
   end
   
   def new

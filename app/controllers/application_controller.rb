@@ -53,6 +53,11 @@ class ApplicationController < ActionController::Base
     end
   end
   
+  # Userテーブルから上長を取り出す
+  def select_superiors
+     @superiors = User.all.where(superior: true)
+  end
+  
   # ページ出力前に1ヶ月分のデータの存在を確認・セット
   def set_one_month 
     @first_day = params[:date].nil? ?

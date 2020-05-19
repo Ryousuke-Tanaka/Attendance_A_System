@@ -110,7 +110,7 @@
             <% end %>
           </td>
           <td><%= day.job_description %></td>
-          <td><%= day.boss %></td>
+          <td><%= User.find(day.boss).name if day.boss.present? %></td>
         </tr>
       <% end %>
     </tbody>
