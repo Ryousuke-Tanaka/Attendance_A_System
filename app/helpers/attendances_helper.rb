@@ -34,8 +34,8 @@ module AttendancesHelper
     if @attendance.spread_day
       format("%.2f",(((estimated_finished_time - designated_work_end_time) / 60) / 60.0) + 24)
     else
-      if (estimated_finished_time - designated_work_end_time) < 0
-        flash[:danger] = "残業時間がマイナスです。"
+      if (estimated_finished_time - designated_work_end_time) <= 0
+        flash.now[:danger] = "残業時間としてカウントできない値が入っています。"
         format("%.2f",(((estimated_finished_time - designated_work_end_time) / 60) / 60.0))      
       else
         format("%.2f",(((estimated_finished_time - designated_work_end_time) / 60) / 60.0))

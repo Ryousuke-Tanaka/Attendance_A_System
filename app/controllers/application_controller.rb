@@ -53,9 +53,9 @@ class ApplicationController < ActionController::Base
     end
   end
   
-  # Userテーブルから上長を取り出す
+  # Userテーブルから上長を取り出す（自分の場合を除く）
   def select_superiors
-     @superiors = User.all.where(superior: true)
+    @superiors = User.all.where(superior: true).where.not(id: @user)
   end
   
   # ページ出力前に1ヶ月分のデータの存在を確認・セット
