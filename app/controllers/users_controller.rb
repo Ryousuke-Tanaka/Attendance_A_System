@@ -42,7 +42,7 @@ class UsersController < ApplicationController
       flash[:success] = "ユーザー情報を更新しました。"
       redirect_to @user
     else
-      render :index
+      render :edit
     end
   end
   
@@ -58,7 +58,8 @@ class UsersController < ApplicationController
       flash[:success] = "#{@user.name}のデータを更新しました。"
       redirect_to users_url
     else
-      render :index
+      flash[:danger] = "データの更新に失敗しました。"
+      redirect_to users_url
     end
   end
   

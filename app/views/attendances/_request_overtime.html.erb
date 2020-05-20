@@ -37,7 +37,7 @@
                 <%= f.fields_for "attendances[]", day do |attendance| %>
                 <tr>
                   <th><%= l(@attendance.worked_on, format: :short) %></th>
-                  <th class="<%= day_of_week_color %>"><%= $days_of_the_week[@attendance.worked_on.wday]%></th>
+                  <th class="<%= day_of_week_color %>"><%= $days_of_the_week[@attendance.worked_on.wday] %></th>
                   <th><%= attendance.time_field :estimated_finished_time, class: "form-control" %></th>
                   <th><%= attendance.check_box :spread_day, id: "remember_me" %></th>
                   <th><%= attendance.text_field :job_description, placeholder: "業務内容を入力してください。", class: "form-control" %></th>
