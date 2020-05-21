@@ -103,7 +103,7 @@ class UsersController < ApplicationController
     @worked_sum = @attendances.where.not(started_at: nil).count
     respond_to do |format|
       format.csv do
-        send_data render_to_string, filename: "#{@user.name}().csv", type: :csv
+        send_data render_to_string, filename: "#{@user.name}_勤務表_(#{Date.current.strftime('%Y年%-m月%')}).csv", type: :csv
       end
     end
   end
