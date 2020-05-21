@@ -3,6 +3,18 @@
 <% provide(:button_text, "修正") %>
 
 <div>
+  <% if @base.errors.any? %>
+    <div id="error_explanation">
+      <div class="alert alert-danger">
+        <ul>
+          <% @base.errors.full_messages.each do |msg| %>
+            <li><%= msg %></li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+  
   <h1>拠点一覧</h1>
   <div>
     <table class="table table-bordered table-condensed table-hover" id="base_table">
@@ -39,7 +51,6 @@
           <td colspan="5" class="collapse-edit">
            <div class="collapse" id="collapse-edit<%= base.id %>" aria-expanded="true" style>
               <%= form_with(model: @base, url: basis_path(base), local: true, method: :patch) do |f| %>
-                <%= render 'shared/model_error_messages', model: f.object %>
                   
                 <%= f.label :base_id, class: "label-#{yield(:class_text)}" %>
                 <%= f.number_field :base_id, value: base.base_id, class: "form-control" %>
@@ -66,7 +77,6 @@
           <td colspan="5" class="collapse-new">
             <div class="collapse" id="collapse-new" aria-expanded="true" style>
               <%= form_with(model: @base, local: true) do |f| %>
-                <%= render 'shared/model_error_messages', model: f.object %>
                   
                 <%= f.label :base_id, class: "label-#{yield(:class_text)}" %>
                 <%= f.number_field :base_id, class: "form-control" %>

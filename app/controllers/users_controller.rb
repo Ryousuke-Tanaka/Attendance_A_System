@@ -59,7 +59,7 @@ class UsersController < ApplicationController
       redirect_to users_url
     else
       flash[:danger] = "データの更新に失敗しました。"
-      redirect_to users_url
+      render :index
     end
   end
   
