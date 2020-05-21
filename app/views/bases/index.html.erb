@@ -1,11 +1,13 @@
 <% provide(:title, "拠点一覧") %>
-<% provide(:class_text, "baseindex") %>
+<% provide(:class_text, "base--index") %>
 <% provide(:button_text, "修正") %>
 
 <div>
   <% if @base.errors.any? %>
     <div id="error_explanation">
       <div class="alert alert-danger">
+         入力エラーが<%= @base.errors.count %>件ありました。
+      </div>
         <ul>
           <% @base.errors.full_messages.each do |msg| %>
             <li><%= msg %></li>

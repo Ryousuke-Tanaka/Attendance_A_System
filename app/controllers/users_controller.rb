@@ -46,13 +46,7 @@ class UsersController < ApplicationController
     end
   end
   
-  def destroy
-    @user.destroy
-    flash[:success] = "#{@user.name}のデータを削除しました。"
-    redirect_to users_url
-  end
-  
-  # 管理者によるユーザー情報更新
+   # 管理者によるユーザー情報更新
   def update_user_info
     if @user.update_attributes(user_info_params)
       flash[:success] = "#{@user.name}のデータを更新しました。"
@@ -61,6 +55,13 @@ class UsersController < ApplicationController
       flash[:danger] = "データの更新に失敗しました。"
       render :index
     end
+  end
+  
+  
+  def destroy
+    @user.destroy
+    flash[:success] = "#{@user.name}のデータを削除しました。"
+    redirect_to users_url
   end
   
   def edit_basic_info
