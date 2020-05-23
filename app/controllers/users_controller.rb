@@ -52,8 +52,8 @@ class UsersController < ApplicationController
       flash[:success] = "#{@user.name}のデータを更新しました。"
       redirect_to users_url
     else
-      flash[:danger] = "データの更新に失敗しました。"
-      render :index
+      flash[:danger] = "データの更新に失敗しました。<br>" + @user.errors.full_messages.join("<br>")
+      redirect_to users_url
     end
   end
   

@@ -40,6 +40,7 @@
         <% @users.each do |user| %>
           <% if current_user.admin? && !current_user?(user) %>
             <%= user.name %><br>
+            <p></p>
               <%= link_to "削除", user, method: :delete,
                   data: { confirm: "削除してもよろしいですか？" },
                   class: "btn btn-primary" %><br>
