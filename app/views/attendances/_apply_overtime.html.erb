@@ -8,10 +8,10 @@
       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>
-      <h1 class="modal-title">からの残業申請</h1>
+      <h1 class="modal-title"><%= @member.name %>からの残業申請</h1>
     </div>
     <div class="modal-body">
-      <%= form_with(model: @user, url: attendances_update_overtime_user_path, local: true, method: :patch) do |f| %>
+      <%= form_with(model: @member, url: attendances_update_overtime_user_path(@member), local: true, method: :patch) do |f| %>
         <table class="table table-bordered">
             
           <thead>
