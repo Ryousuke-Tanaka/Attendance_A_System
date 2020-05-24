@@ -3,6 +3,9 @@ class Attendance < ApplicationRecord
   
   validates :worked_on, presence: true
   validates :note, length: { maximum: 100 }
+  validates :estimated_finished_time, presence: true, allow_nil: true
+  validates :job_description, presence: true, allow_nil: true
+  validates :boss, presence: true, allow_nil: true
   
   # 勤怠の承認・否認のステータス
   enum status: { なし:0, 申請中:1, 承認:2, 否認:3 }
