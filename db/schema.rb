@@ -24,7 +24,8 @@ ActiveRecord::Schema.define(version: 20200523235516) do
     t.datetime "estimated_finished_time"
     t.string "job_description"
     t.integer "boss"
-    t.integer "status"
+    t.integer "status", default: 0, null: false
+    t.boolean "change", default: false
     t.index ["user_id"], name: "index_attendances_on_user_id"
   end
 
