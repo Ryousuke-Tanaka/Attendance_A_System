@@ -58,7 +58,8 @@ class AttendancesController < ApplicationController
         overtime.update_attributes!(item)
       end
     end
-    flash[:success] = "残業申請をしました。"
+    @superior = User.find(params[:id])
+    flash[:success] = "#{@superior.name}に残業申請をしました。"
     redirect_to user_url(date: params[:date])
   rescue ActiveRecord::RecordInvalid
     flash[:danger] = "無効な入力があった為、更新をキャンセルしました。"

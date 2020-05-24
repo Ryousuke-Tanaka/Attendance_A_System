@@ -8,7 +8,7 @@ User.create!(name: "管理者",
              password_confirmation: "password",
              admin: true)
 
-60.times do |n|
+59.times do |n|
   name  = Faker::Name.name
   email = "sample-#{n+1}@email.com"
   employee_number = n + 2

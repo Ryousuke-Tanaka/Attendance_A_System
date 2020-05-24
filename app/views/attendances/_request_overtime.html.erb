@@ -33,7 +33,7 @@
                     when "日"
                       "text-danger"
                     end
-                %>
+                %>S
                 <%= f.fields_for "attendances[]", day do |attendance| %>
                 <tr>
                   <th><%= l(@attendance.worked_on, format: :short) %></th>

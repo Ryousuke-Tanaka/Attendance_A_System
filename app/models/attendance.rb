@@ -4,6 +4,9 @@ class Attendance < ApplicationRecord
   validates :worked_on, presence: true
   validates :note, length: { maximum: 100 }
   
+  # 勤怠の承認・否認のステータス
+  enum status: { なし:0, 申請中:1, 承認:2, 否認:3 }
+  
   # 出勤時間が存在しない場合、退勤時間は無効
   validate :finished_at_is_invalid_without_a_started_at
   
@@ -31,6 +34,5 @@ class Attendance < ApplicationRecord
       errors.add(:started_at, "より早い退勤時間は無効です。") if started_at > finished_at
     end
   end
-  
- 
+
 end
