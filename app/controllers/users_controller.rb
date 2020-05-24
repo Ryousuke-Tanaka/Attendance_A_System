@@ -77,6 +77,7 @@ class UsersController < ApplicationController
     end
   end
   
+  # ユーザー検索
   def search
     if params[:name].present?
       @users = User.where('name LIKE ?', "%#{params[:name]}%").paginate(page: params[:page], per_page: 20 )
@@ -88,6 +89,7 @@ class UsersController < ApplicationController
     render :index
   end
   
+  # CSVインポート
   def import
     if params[:file].blank?
       flash[:danger] = "インポートするCSVファイルを選択してください。"
@@ -99,6 +101,7 @@ class UsersController < ApplicationController
     end
   end
   
+  # CSVエクスポート
   def export
     @worked_sum = @attendances.where.not(started_at: nil).count
     respond_to do |format|
@@ -108,6 +111,7 @@ class UsersController < ApplicationController
     end
   end
   
+  # 出勤中社員判定
   def working_employee
     Attendance.where.not(started_at: nil).each do |attendance|
       if (Date.current == attendance.worked_on) && attendance.finished_at.nil?

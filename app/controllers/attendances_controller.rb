@@ -45,20 +45,21 @@ class AttendancesController < ApplicationController
     redirect_to attendances_edit_one_month_user_url(date: params[:date])
   end
   
+  # 残業申請
   def request_overtime
     @attendance = Attendance.find_by(worked_on: params[:date])
     @attendances = @user.attendances.where(worked_on: @attendance.worked_on)
   end
   
   def update_overtime
-    @attendance = Attendance.find_by(worked_on: params[:date])
+    @attendances = overtime_info_params
     ActiveRecord::Base.transaction do
       overtime_info_params.each do |id, item|
         overtime = Attendance.find(id)
         overtime.update_attributes!(item)
       end
     end
-    @superior = User.find(params[:id])
+    @superior = User.find(Attendance.find(params[:id]).boss)
     flash[:success] = "#{@superior.name}に残業申請をしました。"
     redirect_to user_url(date: params[:date])
   rescue ActiveRecord::RecordInvalid
