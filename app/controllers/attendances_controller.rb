@@ -52,7 +52,6 @@ class AttendancesController < ApplicationController
   end
   
   def update_overtime
-    @attendances = overtime_info_params
     ActiveRecord::Base.transaction do
       overtime_info_params.each do |id, item|
         overtime = Attendance.find(id)
@@ -82,6 +81,6 @@ class AttendancesController < ApplicationController
     
     # 残業申請時のストロングパラメータ
     def overtime_info_params
-      params.require(:user).permit(attendances: [:estimated_finished_time, :spread_day, :job_description, :boss])[:attendances]
+      params.require(:user).permit(attendances: [:estimated_finished_time, :spread_day, :job_description, :boss, :status])[:attendances]
     end
 end
