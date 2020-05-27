@@ -1,5 +1,5 @@
 class AttendancesController < ApplicationController
-  before_action :set_user, only: [:edit_one_month, :update_one_month, :request_overtime, :update_overtime]
+  before_action :set_user, only: [:edit_one_month, :update_one_month, :request_overtime, :update_overtime, :receive_overtime]
   before_action :logged_in_user, only: [:update, :edit_one_month, :request_overtime, :update_overtime]
   before_action :correct_user, only: [:request_overtime, :update_overtime]
   before_action :admin_or_correct_user, only: [:update, :edit_one_month]
@@ -66,10 +66,13 @@ class AttendancesController < ApplicationController
     redirect_to user_url(date: params[:date])
   end
   
-  def apply_overtime
-    @attendance = Attendance.find_by(worked_on: params[:date])
-    @member = User.find(@attendance)
+  # 残業承認・否認
+  def receive_overtime
+    @overtime_requests = Attendance.where(boss: @user.id, status: "残業申請中").group_by(&:user_id)
+     
   end
+  
+  
   
   
   private

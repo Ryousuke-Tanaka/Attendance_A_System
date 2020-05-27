@@ -30,7 +30,7 @@
   <% if @user.superior %>
     <p>【所属長承認申請のお知らせ】</p>
     <p>【勤怠変更申請のお知らせ】件</p>
-    <p>【残業申請のお知らせ】<%= link_to "通知が#{}件あります。", attendances_apply_overtime_user_path, remote: true, class: "request-display-link" %></p>
+    <p>【残業申請のお知らせ】<%= link_to "通知が#{@overtime_requests.count}件あります。", attendances_receive_overtime_user_path(@user), class: "receive-overtime-link" if @overtime_requests.present? %></p>
   <% end %>
 </div>
 
@@ -109,11 +109,12 @@
           <td>
             <% if day.started_at.present? && day.finished_at.present? &&  day.estimated_finished_time.present? %>
               <%= oneday_overtime = overtime_calculation(day.estimated_finished_time, day.spread_day, @user.designated_work_end_time) %>
+              <% @oneday_overtime = oneday_overtime %>
               <% @total_overtime_times= @total_overtime_times.to_f + oneday_overtime.to_f %>
             <% end %>
           </td>
           <td><%= day.job_description %></td>
-          <td><%= User.find(day.boss).name + " " + " " + day.status if day.boss.present? %></td>
+          <td><%= User.find(day.boss).name + "　" + day.status if day.boss.present? %></td>
         </tr>
       <% end %>
     </tbody>
@@ -155,5 +156,5 @@
 </div>
 
 <!-- モーダルウィンドウ表示 -->
+<div id="receive-overtime" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
 <div id="request-overtime" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
-<div id="apply-overtime" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>

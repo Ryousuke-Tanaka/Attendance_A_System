@@ -1,4 +1,4 @@
-<% provide(:class_text, 'overtime') %>
+<% provide(:class_text, 'request_overtime') %>
 <% provide(:button_text, '残業を申請する') %>
 
 
@@ -35,7 +35,7 @@
                     end
                 %>
                 <%= f.fields_for "attendances[]", day do |attendance| %>
-                   <%= attendance.hidden_field :status, {value: "申請中"} %>
+                   <%= attendance.hidden_field :status, {value: "残業申請中"} %>
                 <tr>
                   <th><%= l(@attendance.worked_on, format: :short) %></th>
                   <th class="<%= day_of_week_color %>"><%= $days_of_the_week[@attendance.worked_on.wday] %></th>
