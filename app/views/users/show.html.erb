@@ -2,10 +2,10 @@
 <div>
   <table class="table table-bordered table-condensed user-table">
     <tr>
-      <td><%= link_to "◀", user_path(date: @first_day.prev_month), class: "btn btn-primary" %>&nbsp;&nbsp;
+      <td><%= link_to "◀", user_path(date: @first_day.prev_month), class: "btn btn-primary" if current_user == @user %>&nbsp;&nbsp;
           <%= l(@first_day, format: :middle) %>時間管理表&nbsp;&nbsp;
-          <%= link_to "▶", user_path(date: @first_day.next_month), class: "btn btn-primary" %>
-      </td>
+          <%= link_to "▶", user_path(date: @first_day.next_month), class: "btn btn-primary" if current_user == @user %>
+        </td>
       <td>
         指定勤務開始時間<%= format_basic_info(@user.designated_work_start_time) %><br>
         指定勤務終了時間<%= format_basic_info(@user.designated_work_end_time) %>
@@ -27,7 +27,7 @@
 
 
 <div class="request-display">
-  <% if @user.superior %>
+  <% if @user.superior && current_user == @user %>
     <p>【所属長承認申請のお知らせ】</p>
     <p>【勤怠変更申請のお知らせ】件</p>
     <p>【残業申請のお知らせ】<%= link_to "通知が#{@overtime_requests.count}件あります。", attendances_receive_overtime_user_path(@user), class: "receive-overtime-link" if @overtime_requests.present? %></p>
@@ -36,9 +36,11 @@
 
 
 <div class="btn-users-shows">
-  <%= link_to "勤怠を編集", attendances_edit_one_month_user_path(date: @first_day),  class: "btn btn-primary" %>
-  <%= link_to "CSV出力",export_user_path(date: @first_day, format: :csv), class: "btn btn-primary" %><br>
-  <%= link_to "勤怠修正ログ（承認済）", "#", class: "btn btn-primary" %>
+  <% if current_user == @user %>
+    <%= link_to "勤怠を編集", attendances_edit_one_month_user_path(date: @first_day),  class: "btn btn-primary" %>
+    <%= link_to "CSV出力",export_user_path(date: @first_day, format: :csv), class: "btn btn-primary" %><br>
+    <%= link_to "勤怠修正ログ（承認済）", "#", class: "btn btn-primary" %>
+  <% end %>
 </div>
   
 <div>
@@ -64,7 +66,11 @@
       <tr>
         <th>時</th>
         <th>分</th>
-        <th>出退勤ボタン</th>
+        <% if current_user == @user %>
+          <th>出退勤ボタン</th>
+        <% else %>
+          <th></th>
+        <% end %>
         <th>時</th>
         <th>分</th>
         <th></th>
@@ -84,13 +90,13 @@
           end
         %>
         <tr>
-          <td><%= link_to "残業申請", attendances_request_overtime_user_path(date: day.worked_on), remote: true, class: "btn btn-default btn-primary" %></td>
+          <td><%= link_to "残業申請", attendances_request_overtime_user_path(date: day.worked_on), remote: true, class: "btn btn-default btn-primary" if current_user == @user %></td>
           <td><%= l(day.worked_on, format: :short) %></td>
           <td class="<%= day_of_week_color %>"><%= $days_of_the_week[day.worked_on.wday] %></td>
           <td><%= day.started_at.hour if day.started_at.present? %></td>
           <td><%= set_minutes(day.started_at) if day.started_at.present? %></td>
           <td>
-            <% if btn_text = attendance_state(day) %>
+            <% if btn_text = attendance_state(day) && current_user == @user %>
               <%= link_to "#{btn_text}", user_attendance_path(@user, day), method: :patch, class: "btn btn-block btn-primary btn-attendance" %>
             <% end %>
           </td>
@@ -128,7 +134,11 @@
         <td colspan="3"></td>
         <td rowspan="2">累計残業時間</td>
         <td></td>
-        <td>所属長承認：</td>
+        <% if current_user == @user %>
+          <td>所属長承認：</td>
+        <% else %>
+          <td></td>
+        <% end%>
       </tr>
       <tr>
         
@@ -141,20 +151,26 @@
         <td rowspan="2" colspan="3"></td>
         <td rowspan="2"><%= format("%.2f", @total_overtime_times.to_f) %></td>
         <td rowspan="2"></td>
-        <td>
-          <%= form_with url: user_attendance_path(@user), method: :patch, local: true do |f|  %>
-            <%= f.collection_select :boss, @superiors, :id, :name, {:include_blank => "選択してください。"}, {class: "form-control"} %>
-        </td>
-      </tr>
-      
-      <tr>
-        <td><%= f.submit "申請", class: "btn btn-default btn-primary btn-request form-control" %></td>
-      </tr>
+        <% if current_user == @user %>
+          <td>
+            <%= form_with url: user_attendance_path(@user), method: :patch, local: true do |f|  %>
+              <%= f.collection_select :boss, @superiors, :id, :name, {:include_blank => "選択してください。"}, {class: "form-control"} %>
+          </td>
+        </tr>
+        
+        <tr>
+          <td><%= f.submit "申請", class: "btn btn-default btn-primary btn-request form-control" %></td>
+        </tr>
+        <% end %>
+      <% else %>
+      <td rowspan="2"></td>
       <% end %>
     </tfoot>
   </table>
 </div>
 
 <!-- モーダルウィンドウ表示 -->
-<div id="receive-overtime" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
-<div id="request-overtime" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
+<% if current_user == @user %>
+  <div id="receive-overtime" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
+  <div id="request-overtime" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
+<% end %>
