@@ -51,7 +51,6 @@
                     <td><%= attendance.check_box :change, { class: "check_box" }, true, false %></td>
                     <td><%= link_to "確認",user_path(id: @member, date: day.worked_on), class: "btn btn-primary btn-#{yield(:class_text)}" %></td>
                   </tr>
-                  
                   <% end %>
                 <% end %>
               </tbody>

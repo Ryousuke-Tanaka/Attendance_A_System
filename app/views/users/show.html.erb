@@ -30,7 +30,7 @@
   <% if @user.superior && current_user == @user %>
     <p>【所属長承認申請のお知らせ】</p>
     <p>【勤怠変更申請のお知らせ】件</p>
-    <p>【残業申請のお知らせ】<%= link_to "通知が#{@overtime_requests.count}件あります。", attendances_receive_overtime_user_path(@user), class: "receive-overtime-link" if @overtime_requests.present? %></p>
+    <p>【残業申請のお知らせ】<%= link_to "通知が#{@overtime_requests.count}件あります。", attendances_receive_overtime_user_path(@user), remote: true, class: "receive-overtime-link" if @overtime_requests.present? %></p>
   <% end %>
 </div>
 
@@ -96,7 +96,7 @@
           <td><%= day.started_at.hour if day.started_at.present? %></td>
           <td><%= set_minutes(day.started_at) if day.started_at.present? %></td>
           <td>
-            <% if btn_text = attendance_state(day) && current_user == @user %>
+            <% if btn_text = attendance_state(day) %>
               <%= link_to "#{btn_text}", user_attendance_path(@user, day), method: :patch, class: "btn btn-block btn-primary btn-attendance" %>
             <% end %>
           </td>
@@ -167,6 +167,11 @@
       <% end %>
     </tfoot>
   </table>
+  <div class="footer-button">
+    <% unless current_user == @user %>
+      <%= link_to "キャンセル", user_path(current_user), class: "btn btn-lg btn-default" %>
+    <% end %>
+  </div>
 </div>
 
 <!-- モーダルウィンドウ表示 -->

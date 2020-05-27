@@ -71,9 +71,6 @@ class AttendancesController < ApplicationController
     @overtime_requests = Attendance.where(boss: @user.id, status: "残業申請中").group_by(&:user_id)
   end
   
-  def check_attendance
-    @attendance = Attendance.find_by(params[:user_id])
-  end
   
   
   private
