@@ -1,5 +1,5 @@
 <% provide(:class_text, 'receive_overtime') %>
-<% provide(:button_text, '申請を承認する') %>
+<% provide(:button_text, '変更を送信する') %>
 
 
 <div class="modal-dialog modal-lg modal-dialog-center">
@@ -11,6 +11,7 @@
     </div>
     <div class="modal-body">
       <% @overtime_requests.each do |key, overtime_requests| %>
+      <% @member = User.find(key) %>
         <h1 class="modal-title"><%= User.find(key).name %>からの残業申請</h1>
         <%= form_with(model: @user, url: attendances_update_overtime_user_path(overtime_requests), local: true, method: :patch) do |f| %>
           <table class="table table-bordered">
@@ -42,9 +43,14 @@
                   <tr>
                     <td><%= l(day.worked_on, format: :short) %></td>
                     <td class="<%= day_of_week_color %>"><%= $days_of_the_week[day.worked_on.wday]%></td>
-                    <td><%= day.estimated_finished_time %></td>
-                    <td><%= User.find(day.user_id).designated_work_end_time %></td>
+                    <td><%= day.estimated_finished_time.strftime("%H:%M") %></td>
+                    <td><%= @member.designated_work_end_time.strftime("%H:%M") %></td>
+                    <td><%= overtime_calculation(day.estimated_finished_time, day.spread_day, @member.designated_work_end_time) %></td>
                     <td><%= day.job_description %></td>
+                    <td><%= attendance.select :status, Attendance.statuses.keys.to_a, {}, class: "form-control" %></td>
+                    <td><%= attendance.check_box :change, { class: "check_box" }, true, false %></td>
+                    <td><%= link_to "確認",user_path(id: @member, date: day.worked_on), class: "btn btn-primary btn-#{yield(:class_text)}" %></td>
+                  </tr>
                   
                   <% end %>
                 <% end %>
