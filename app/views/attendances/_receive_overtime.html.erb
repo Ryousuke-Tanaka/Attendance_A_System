@@ -13,7 +13,7 @@
       <% @overtime_requests.each do |key, overtime_requests| %>
       <% @member = User.find(key) %>
         <h1 class="modal-title"><%= User.find(key).name %>からの残業申請</h1>
-        <%= form_with(model: @user, url: attendances_update_overtime_user_path(overtime_requests), local: true, method: :patch) do |f| %>
+        <%= form_with(model: @user, url: attendances_update_overtime_user_path(key), local: true, method: :patch) do |f| %>
           <table class="table table-bordered">
               
             <thead>
@@ -54,15 +54,14 @@
                   <% end %>
                 <% end %>
               </tbody>
-                    
-              <table>
-                <div class="footer-button">
-                  <%= f.submit yield(:button_text), class: "btn btn-primary btn-#{yield(:class_text)}" %>
-                  <button type="button" class="btn btn-default btn-<%= yield(:class_text) %>" data-dismiss="modal">
-                    キャンセル
-                </button>
-              </div>
             </table>
+          <table>
+            <div class="footer-button">
+              <%= f.submit yield(:button_text), class: "btn btn-primary btn-#{yield(:class_text)}" %>
+                <button type="button" class="btn btn-default btn-<%= yield(:class_text) %>" data-dismiss="modal">
+                  キャンセル
+                </button>
+            </div>
           </table>
         <% end %>
       <% end %>

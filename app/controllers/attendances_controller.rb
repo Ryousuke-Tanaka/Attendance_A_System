@@ -1,7 +1,8 @@
 class AttendancesController < ApplicationController
   before_action :set_user, only: [:edit_one_month, :update_one_month, :request_overtime, :update_overtime, :receive_overtime]
   before_action :logged_in_user, only: [:update, :edit_one_month, :request_overtime, :update_overtime]
-  before_action :correct_user, only: [:request_overtime, :update_overtime]
+  before_action :correct_user, only: [:request_overtime, :receive_overtime]
+  before_action :superior_or_correct_user, only: :update_overtime
   before_action :admin_or_correct_user, only: [:update, :edit_one_month]
   before_action :set_one_month, only: [:edit_one_month, :request_overtime]
   before_action :select_superiors, only: [:edit_one_month, :update_one_month, :request_overtime, :update_overtime]
@@ -52,15 +53,20 @@ class AttendancesController < ApplicationController
   end
   
   def update_overtime
+    @user = User.find(Attendance.find(params[:id]).user_id) if @user.blank?
     ActiveRecord::Base.transaction do
       overtime_info_params.each do |id, item|
         overtime = Attendance.find(id)
         overtime.update_attributes!(item)
       end
     end
-    @superior = User.find(Attendance.find(params[:id]).boss)
-    flash[:success] = "#{@superior.name}に残業申請をしました。"
-    redirect_to user_url(date: params[:date])
+    if current_user == @user
+      @superior = User.find(Attendance.find(params[:id]).boss)
+      flash[:success] = "#{@superior.name}に残業申請をしました。"
+    else
+      flash[:success] = "#{@user.name}の残業申請の決裁を更新しました。"
+    end
+    redirect_to user_url(current_user, date: params[:date])
   rescue ActiveRecord::RecordInvalid
     flash[:danger] = "無効な入力があった為、更新をキャンセルしました。"
     redirect_to user_url(date: params[:date])

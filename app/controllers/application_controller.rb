@@ -53,6 +53,15 @@ class ApplicationController < ActionController::Base
     end
   end
   
+  # 勤怠情報のユーザー本人またはその上長を許可
+  def superior_or_correct_user
+    @user = User.find(Attendance.find(params[:id]).user_id) if @user.blank?
+    unless current_user?(@user) || current_user.superior?
+      flash[:danger] = "閲覧・編集権限がありません。"
+      redirect_to(root_url)
+    end
+  end
+  
   # Userテーブルから上長を取り出す（自分の場合を除く）
   def select_superiors
     @superiors = User.all.where(superior: true).where.not(id: @user)
