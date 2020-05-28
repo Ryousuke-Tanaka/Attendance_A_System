@@ -53,7 +53,7 @@ class ApplicationController < ActionController::Base
     end
   end
   
-  # 勤怠情報のユーザー本人またはその上長を許可
+  # 勤怠情報のユーザー本人または上長を許可
   def superior_or_correct_user
     @user = User.find(Attendance.find(params[:id]).user_id) if @user.blank?
     unless current_user?(@user) || current_user.superior?

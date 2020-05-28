@@ -53,7 +53,8 @@ class AttendancesController < ApplicationController
   end
   
   def update_overtime
-    @user = User.find(Attendance.find(params[:id]).user_id) if @user.blank?
+    @attendance = Attendance.find(params[:id])
+    @user = User.find(@attendance.user_id) if @user.blank?
     ActiveRecord::Base.transaction do
       overtime_info_params.each do |id, item|
         overtime = Attendance.find(id)
