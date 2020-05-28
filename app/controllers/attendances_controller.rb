@@ -61,8 +61,9 @@ class AttendancesController < ApplicationController
         overtime.update_attributes!(item)
       end
     end
+    @attendance = Attendance.find(params[:id])
     if current_user == @user
-      @superior = User.find(Attendance.find(params[:id]).boss)
+      @superior = User.find(@attendance.boss)
       flash[:success] = "#{@superior.name}に残業申請をしました。"
     else
       flash[:success] = "#{@user.name}の残業申請の決裁を更新しました。"
