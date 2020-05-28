@@ -49,7 +49,7 @@
                     <td><%= day.job_description %></td>
                     <td><%= attendance.select :status, Attendance.statuses.keys.to_a, {}, class: "form-control" %></td>
                     <td><%= attendance.check_box :change, { class: "check_box" }, true, false %></td>
-                    <td><%= link_to "確認",user_path(id: @member, date: day.worked_on), class: "btn btn-primary btn-#{yield(:class_text)}" %></td>
+                    <td><%= link_to "確認",user_path(id: @member, date: day.worked_on.beginning_of_month), class: "btn btn-primary btn-#{yield(:class_text)}" %></td>
                   </tr>
                   <% end %>
                 <% end %>
