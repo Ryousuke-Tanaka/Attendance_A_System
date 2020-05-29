@@ -95,11 +95,15 @@
           <td class="<%= day_of_week_color %>"><%= $days_of_the_week[day.worked_on.wday] %></td>
           <td><%= day.started_at.hour if day.started_at.present? %></td>
           <td><%= set_minutes(day.started_at) if day.started_at.present? %></td>
-          <td>
-            <% if btn_text = attendance_state(day) %>
-              <%= link_to "#{btn_text}", user_attendance_path(@user, day), method: :patch, class: "btn btn-block btn-primary btn-attendance" %>
-            <% end %>
-          </td>
+          <% if current_user == @user %>
+            <td>
+              <% if btn_text = attendance_state(day) %>
+                <%= link_to "#{btn_text}", user_attendance_path(@user, day), method: :patch, class: "btn btn-block btn-primary btn-attendance" %>
+              <% end %>
+            </td>
+          <% else %>
+            <td></td>
+          <% end %>
           <td><%= day.finished_at.hour if day.finished_at.present? %></td>
           <td><%= set_minutes(day.finished_at) if day.finished_at.present? %></td>
           <td></td>
