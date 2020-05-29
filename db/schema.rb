@@ -24,7 +24,8 @@ ActiveRecord::Schema.define(version: 20200523235516) do
     t.datetime "estimated_finished_time"
     t.string "job_description"
     t.integer "boss"
-    t.integer "status", default: 0, null: false
+    t.integer "overtime_request_status", default: 0, null: false
+    t.integer "attendance_request_status", default: 0, null: false
     t.boolean "change", default: false
     t.index ["user_id"], name: "index_attendances_on_user_id"
   end
@@ -47,10 +48,10 @@ ActiveRecord::Schema.define(version: 20200523235516) do
     t.string "remember_digest"
     t.boolean "admin", default: false
     t.string "affiliation", default: "未所属"
-    t.datetime "basic_time", default: "2020-05-23 23:00:00"
-    t.datetime "work_time", default: "2020-05-23 22:30:00"
-    t.datetime "designated_work_start_time", default: "2020-05-24 00:00:00"
-    t.datetime "designated_work_end_time", default: "2020-05-24 09:00:00"
+    t.datetime "basic_time", default: "2020-05-28 23:00:00"
+    t.datetime "work_time", default: "2020-05-28 22:30:00"
+    t.datetime "designated_work_start_time", default: "2020-05-29 00:00:00"
+    t.datetime "designated_work_end_time", default: "2020-05-29 09:00:00"
     t.boolean "superior", default: false
     t.integer "employee_number"
     t.string "uid"

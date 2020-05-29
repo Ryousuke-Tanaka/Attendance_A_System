@@ -39,7 +39,7 @@ class AttendancesController < ApplicationController
         attendance.update_attributes!(item)
       end
     end
-    flash[:success] = "1ヶ月分の勤怠情報を更新しました。"
+    flash[:success] = "1ヶ月分の勤怠情報を更新・申請しました。"
     redirect_to user_url(date: params[:date])
   rescue ActiveRecord::RecordInvalid
      flash[:danger] = "無効な入力があった為、更新をキャンセルしました。"
@@ -53,17 +53,15 @@ class AttendancesController < ApplicationController
   end
   
   def update_overtime
-    @attendance = Attendance.find(params[:id])
-    @user = User.find(@attendance.user_id) if @user.blank?
+    @user = User.find(params[:id])
     ActiveRecord::Base.transaction do
       overtime_info_params.each do |id, item|
-        overtime = Attendance.find(id)
-        overtime.update_attributes!(item)
+        @overtime = Attendance.find(id)
+        @overtime.update_attributes!(item)
       end
     end
-    @attendance = Attendance.find(params[:id])
     if current_user == @user
-      @superior = User.find(@attendance.boss)
+      @superior = User.find(@overtime.boss)
       flash[:success] = "#{@superior.name}に残業申請をしました。"
     else
       flash[:success] = "#{@user.name}の残業申請の決裁を更新しました。"
@@ -76,9 +74,12 @@ class AttendancesController < ApplicationController
   
   # 残業承認・否認
   def receive_overtime
-    @overtime_requests = Attendance.where(boss: @user.id, status: "残業申請中").group_by(&:user_id)
+    @overtime_requests = Attendance.where(boss: @user.id, overtime_request_status: "申請中").group_by(&:user_id)
   end
   
+  # 勤怠ログ
+  def edit_log
+  end
   
   
   private
@@ -90,6 +91,6 @@ class AttendancesController < ApplicationController
     
     # 残業申請時のストロングパラメータ
     def overtime_info_params
-      params.require(:user).permit(attendances: [:estimated_finished_time, :spread_day, :job_description, :boss, :status])[:attendances]
+      params.require(:user).permit(attendances: [:estimated_finished_time, :spread_day, :job_description, :boss, :overtime_request_status])[:attendances]
     end
 end

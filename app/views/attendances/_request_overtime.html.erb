@@ -35,12 +35,12 @@
                     end
                 %>
                 <%= f.fields_for "attendances[]", day do |attendance| %>
-                   <%= attendance.hidden_field :status, {value: "残業申請中"} %>
+                   <%= attendance.hidden_field :overtime_request_status, value: "申請中" %>
                 <tr>
                   <th><%= l(@attendance.worked_on, format: :short) %></th>
                   <th class="<%= day_of_week_color %>"><%= $days_of_the_week[@attendance.worked_on.wday] %></th>
                   <th><%= attendance.time_field :estimated_finished_time, class: "form-control" %></th>
-                  <th><%= attendance.check_box :spread_day, id: "remember_me" %></th>
+                  <th><%= attendance.check_box :spread_day, id: "spread_day" %></th>
                   <th><%= attendance.text_field :job_description, placeholder: "業務内容を入力してください。", class: "form-control" %></th>
                   <th><%= attendance.collection_select :boss, @superiors, :id, :name, {:include_blank => "選択してください。"}, {class: "form-control"} %></th>
                 </tr>

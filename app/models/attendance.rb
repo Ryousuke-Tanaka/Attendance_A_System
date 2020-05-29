@@ -7,8 +7,11 @@ class Attendance < ApplicationRecord
   validates :job_description, presence: true, allow_nil: true
   validates :boss, presence: true, allow_nil: true
   
+  # 残業の承認・否認のステータス
+  enum overtime_request_status: { なし: 0, 申請中: 1, 承認: 2, 否認: 3 }, _prefix: true
+  
   # 勤怠の承認・否認のステータス
-  enum status: { なし: 0, 残業申請中: 1, 残業承認: 2, 残業否認: 3 }
+  enum attendance_request_status: { なし: 0, 申請中: 1, 承認: 2, 否認: 3 }, _prefix: true
   
   # 出勤時間が存在しない場合、退勤時間は無効
   validate :finished_at_is_invalid_without_a_started_at

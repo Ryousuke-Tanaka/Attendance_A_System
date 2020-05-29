@@ -39,7 +39,7 @@
   <% if current_user == @user %>
     <%= link_to "勤怠を編集", attendances_edit_one_month_user_path(date: @first_day),  class: "btn btn-primary" %>
     <%= link_to "CSV出力",export_user_path(date: @first_day, format: :csv), class: "btn btn-primary" %><br>
-    <%= link_to "勤怠修正ログ（承認済）", "#", class: "btn btn-primary" %>
+    <%= link_to "勤怠修正ログ（承認済）", attendances_edit_log_user_path(date: @first_day), class: "btn btn-primary" %>
   <% end %>
 </div>
   
@@ -120,7 +120,9 @@
             <% end %>
           </td>
           <td><%= day.job_description %></td>
-          <td><%= User.find(day.boss).name + "　" + day.status if day.boss.present? %></td>
+          <td><%= User.find(day.boss).name + "　残業" + day.overtime_request_status if day.boss.present? && day.overtime_request_status != "なし" %><br>
+              <%= User.find(day.boss).name + "　勤怠編集" + day.attendance_request_status if day.boss.present? && day.attendance_request_status != "なし" %>
+          </td>
         </tr>
       <% end %>
     </tbody>
@@ -135,10 +137,10 @@
         <td rowspan="2">累計残業時間</td>
         <td></td>
         <% if current_user == @user %>
-          <td>所属長承認：</td>
+          <td>所属長承認：<%= %></td>
         <% else %>
           <td></td>
-        <% end%>
+        <% end %>
       </tr>
       <tr>
         
