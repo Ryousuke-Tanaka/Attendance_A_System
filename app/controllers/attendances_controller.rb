@@ -1,5 +1,5 @@
 class AttendancesController < ApplicationController
-  before_action :set_user, only: [:edit_one_month, :update_one_month, :request_overtime, :update_overtime, :receive_overtime]
+  before_action :set_user, only: [:edit_one_month, :update_one_month, :request_overtime, :update_overtime, :receive_overtime, :receive_change_attendance]
   before_action :logged_in_user, only: [:update, :edit_one_month, :request_overtime, :update_overtime]
   before_action :correct_user, only: [:request_overtime, :receive_overtime]
   before_action :superior_or_correct_user, only: :update_overtime
@@ -29,6 +29,7 @@ class AttendancesController < ApplicationController
     redirect_to @user
   end
   
+  # 勤怠修正
   def edit_one_month
   end
   
@@ -51,6 +52,10 @@ class AttendancesController < ApplicationController
   
   # 勤怠修正を申請
   def request_change_attendance
+  end
+  
+  # 勤怠修正を受領
+  def receive_change_attendance
     @change_attendance_requests = Attendance.where(boss: @user.id, edit_attendance_request_status: "申請中").group_by(&:user_id)
   end
   
