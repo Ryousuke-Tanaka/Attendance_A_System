@@ -33,6 +33,7 @@ class AttendancesController < ApplicationController
   def edit_one_month
   end
   
+  # 社員による勤怠情報修正
   def update_one_month
     ActiveRecord::Base.transaction do
       attendances_params.each do |id, item|
@@ -50,13 +51,28 @@ class AttendancesController < ApplicationController
     redirect_to attendances_edit_one_month_user_url(date: params[:date])
   end
   
-  # 勤怠修正を申請
-  def request_change_attendance
-  end
-  
   # 勤怠修正を受領
   def receive_change_attendance
     @change_attendance_requests = Attendance.where(boss: @user.id, edit_attendance_request_status: "申請中").group_by(&:user_id)
+  end
+  
+  # 上長による勤怠修正を承認・否認
+  def update_change_attendance
+    ActiveRecord::Base.transaction do
+      change_attendance_params.each do |id, item|
+        change_attendance = Attendance.find(id)
+        if params[:user][:attendances][id][:change] == "true"
+          change_attendance.update_attributes!(item)
+        else
+          flash[:danger] = "変更にチェックを入れてください。"
+        end
+      end
+    end
+    flash[:success] = "勤怠変更の決裁を更新しました。"
+    redirect_to user_url(date: params[:date])
+  rescue ActiveRecord::RecordInvalid
+     flash[:danger] = "無効な入力があった為、更新をキャンセルしました。"
+    redirect_to user_url(date: params[:date])
   end
   
   # 残業申請
@@ -65,11 +81,12 @@ class AttendancesController < ApplicationController
     @attendances = @user.attendances.where(worked_on: @attendance.worked_on)
   end
   
-  # 残業承認・否認
+  # 残業申請を受領
   def receive_overtime
     @overtime_requests = Attendance.where(boss: @user.id, overtime_request_status: "申請中").group_by(&:user_id)
   end
   
+  # 社員が残業申請を登録 
   def update_overtime
     @user = User.find(params[:id])
     ActiveRecord::Base.transaction do
@@ -86,6 +103,7 @@ class AttendancesController < ApplicationController
     redirect_to user_url(date: params[:date])
   end
   
+  # 上長の残業申請の承認・否認
   def decision_overtime
     ActiveRecord::Base.transaction do
       decision_overtime_params.each do |id, item|
@@ -134,6 +152,11 @@ class AttendancesController < ApplicationController
     # 1ヶ月分の勤怠情報を扱う
     def attendances_params
       params.require(:user).permit(attendances: [:started_at, :finished_at, :note, :spread_day, :boss])[:attendances]
+    end
+    
+    # 勤怠情報修正時のストロングパラメータ
+    def change_attendance_params
+      params.require(:user).permit(attendances: [:edit_attendance_request_status])[:attendances]
     end
     
     # 残業申請時のストロングパラメータ
