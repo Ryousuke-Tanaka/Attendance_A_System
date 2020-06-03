@@ -35,8 +35,11 @@ class AttendancesController < ApplicationController
   def update_one_month
     ActiveRecord::Base.transaction do
       attendances_params.each do |id, item|
-        attendance = Attendance.find(id)
-        attendance.update_attributes!(item)
+        if (item)[:note].present?
+          attendance = Attendance.find(id)
+          attendance.edit_attendance_request_status = "申請中"        
+          attendance.update_attributes!(item)
+        end
       end
     end
     flash[:success] = "1ヶ月分の勤怠情報を更新・申請しました。"
@@ -44,6 +47,11 @@ class AttendancesController < ApplicationController
   rescue ActiveRecord::RecordInvalid
      flash[:danger] = "無効な入力があった為、更新をキャンセルしました。"
     redirect_to attendances_edit_one_month_user_url(date: params[:date])
+  end
+  
+  # 勤怠修正を申請
+  def request_change_attendance
+    @change_attendance_requests = Attendance.where(boss: @user.id, edit_attendance_request_status: "申請中").group_by(&:user_id)
   end
   
   # 残業申請
@@ -108,6 +116,7 @@ class AttendancesController < ApplicationController
   end
   
   def receive_one_month_request
+    @receive_one_month_requests = Attendance.where(boss: @user.id, one_month_request_status: "申請中").group_by(&:user_id)
   end
   
   # 勤怠ログ
@@ -119,7 +128,7 @@ class AttendancesController < ApplicationController
   
     # 1ヶ月分の勤怠情報を扱う
     def attendances_params
-      params.require(:user).permit(attendances: [:started_at, :finished_at, :note, :spread_day])[:attendances]
+      params.require(:user).permit(attendances: [:started_at, :finished_at, :note, :spread_day, :boss])[:attendances]
     end
     
     # 残業申請時のストロングパラメータ

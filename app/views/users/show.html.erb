@@ -30,7 +30,9 @@
   <% if @user.superior && current_user == @user %>
     <p>【所属長承認申請のお知らせ】<%= link_to "通知が#{@one_month_requests.count}件あります。", attendances_receive_one_month_request_user_path(@user), remote: true,
         class: "receive-overtime-link" if @one_month_requests.present? %></p>
-    <p>【勤怠変更申請のお知らせ】件</p>
+    <p>【勤怠変更申請のお知らせ】<%= link_to "通知が#{@change_attendance_requests.count}件あります。", attendances_receive_overtime_user_path(@user), remote: true,
+        class: "receive-overtime-link" if @overtime_requests.present? %>
+    </p>
     <p>【残業申請のお知らせ】<%= link_to "通知が#{@overtime_requests.count}件あります。", attendances_receive_overtime_user_path(@user), remote: true,
         class: "receive-overtime-link" if @overtime_requests.present? %>
     </p>

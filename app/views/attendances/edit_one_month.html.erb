@@ -26,7 +26,6 @@
             end
           %>
           <%= f.fields_for "attendances[]", day do |attendance| %>
-            <%= attendance.hidden_field :attendance_request_status, {value: "申請中"} %>
             <tr>
               <td><%= l(day.worked_on, format: :short) %></td>
               <td class="<%= day_of_week_color %>"><%= $days_of_the_week[day.worked_on.wday] %></td>

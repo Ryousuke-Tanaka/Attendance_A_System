@@ -10,14 +10,14 @@
       </button>
     </div>
     <div class="modal-body">
-      <% @overtime_requests.each do |key, overtime_requests| %>
-      <% @member = User.find(key) %>
-        <h1 class="modal-title"><%= User.find(key).name %>からの残業申請</h1>
-        <%= form_with(model: @user, url: attendances_decision_overtime_user_path(key), local: true, method: :patch) do |f| %>
+      <%= form_with(model: @user, url: attendances_receive_one_month_request_user_path, local: true, method: :patch) do |f| %>
+        <% @one_month_requests.each do |key, overtime_requests| %>
           <table class="table table-bordered">
-              
+                
             <thead>
               <tr>
+                <% @member = User.find(key) %>
+                <h1 class="modal-title"><%= User.find(key).name %>からの残業申請</h1>
                 <th>日付</th>
                 <th>曜日</th>
                 <th>終了予定時間</th>
@@ -28,47 +28,44 @@
                 <th>変更</th>
                 <th>勤怠を確認する</th>
               </tr>
-                  
-              <tbody>
-                <% overtime_requests.each do |day| %>
-                  <%
-                    day_of_week_color = case $days_of_the_week[day.worked_on.wday]
-                      when "土"
-                        "text-primary"
-                      when "日"
-                        "text-danger"
-                      end
-                  %>
-                  <%= f.fields_for "attendances[]", day do |attendance| %>
-                  <tr>
-                    <td><%= l(day.worked_on, format: :short) %></td>
-                    <td class="<%= day_of_week_color %>"><%= $days_of_the_week[day.worked_on.wday]%></td>
-                    <td><%= day.estimated_finished_time.strftime("%H:%M") %></td>
-                    <td><%= @member.designated_work_end_time.strftime("%H:%M") %></td>
-                    <td><%= overtime_calculation(day.estimated_finished_time, day.spread_day, @member.designated_work_end_time) %></td>
-                    <td><%= day.job_description %></td>
-                    <td><%= attendance.select :overtime_request_status, Attendance.overtime_request_statuses.keys.to_a, {}, class: "form-control" %></td>
-                    <td><%= attendance.check_box :change, { class: "check_box" }, true, false %></td>
-                    <td><%= link_to "確認",user_path(id: @member, date: day.worked_on.beginning_of_month), class: "btn btn-primary btn-#{yield(:class_text)}" %></td>
-                  </tr>
-                  <% end %>
-                <% end %>
-              </tbody>
-            </table>
-          <table>
-            <div class="footer-button">
-              <% if @overtime_requests.last? %>
-                <%= f.submit yield(:button_text), class: "btn btn-primary btn-#{yield(:class_text)}" %>
-                  <button type="button" class="btn btn-default btn-<%= yield(:class_text) %>" data-dismiss="modal">
-                    キャンセル
-                  </button>
-                <% else %>
-                  <% f.submit %>
-                <% end %>
-            </div>
-          </table>
-        <% end %>
-      <% end %>
-    </div>
+            </thead>
+                    
+            <tbody>
+              <% overtime_requests.each do |day| %>
+                <%
+                  day_of_week_color = case $days_of_the_week[day.worked_on.wday]
+                    when "土"
+                      "text-primary"
+                    when "日"
+                      "text-danger"
+                    end
+                %>
+                <%= f.fields_for "attendances[]", day do |attendance| %>
+                <tr>
+                  <td><%= l(day.worked_on, format: :short) %></td>
+                  <td class="<%= day_of_week_color %>"><%= $days_of_the_week[day.worked_on.wday]%></td>
+                  <td><%= day.estimated_finished_time.strftime("%H:%M") %></td>
+                  <td><%= @member.designated_work_end_time.strftime("%H:%M") %></td>
+                  <td><%= overtime_calculation(day.estimated_finished_time, day.spread_day, @member.designated_work_end_time) %></td>
+                  <td><%= day.job_description %></td>
+                  <td><%= attendance.select :overtime_request_status, Attendance.overtime_request_statuses.keys.to_a, {}, class: "form-control" %></td>
+                  <td><%= attendance.check_box :change, { class: "check_box" }, true, false %></td>
+                  <td><%= link_to "確認",user_path(id: @member, date: day.worked_on.beginning_of_month), class: "btn btn-primary btn-#{yield(:class_text)}" %></td>
+                </tr>
+              <% end %>
+            <% end %>
+          </tbody>
+        </table>
+       <% end %>
+          
+      <table>
+        <div class="footer-button">
+          <%= f.submit yield(:button_text), class: "btn btn-primary btn-#{yield(:class_text)}" %>
+            <button type="button" class="btn btn-default btn-<%= yield(:class_text) %>" data-dismiss="modal">
+              キャンセル
+            </button>
+        </div>
+      </table>
+    <% end %>
   </div>
 </div>
