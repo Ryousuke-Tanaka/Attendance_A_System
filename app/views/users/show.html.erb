@@ -28,9 +28,12 @@
 
 <div class="request-display">
   <% if @user.superior && current_user == @user %>
-    <p>【所属長承認申請のお知らせ】</p>
+    <p>【所属長承認申請のお知らせ】<%= link_to "通知が#{@one_month_requests.count}件あります。", attendances_receive_one_month_request_user_path(@user), remote: true,
+        class: "receive-overtime-link" if @one_month_requests.present? %></p>
     <p>【勤怠変更申請のお知らせ】件</p>
-    <p>【残業申請のお知らせ】<%= link_to "通知が#{@overtime_requests.count}件あります。", attendances_receive_overtime_user_path(@user), remote: true, class: "receive-overtime-link" if @overtime_requests.present? %></p>
+    <p>【残業申請のお知らせ】<%= link_to "通知が#{@overtime_requests.count}件あります。", attendances_receive_overtime_user_path(@user), remote: true,
+        class: "receive-overtime-link" if @overtime_requests.present? %>
+    </p>
   <% end %>
 </div>
 
@@ -125,7 +128,7 @@
           </td>
           <td><%= day.job_description %></td>
           <td><%= User.find(day.boss).name + "　残業" + day.overtime_request_status if day.boss.present? && day.overtime_request_status != "なし" %><br>
-              <%= User.find(day.boss).name + "　勤怠編集" + day.attendance_request_status if day.boss.present? && day.attendance_request_status != "なし" %>
+              <%= User.find(day.boss).name + "　勤怠編集" + day.edit_attendance_request_status if day.boss.present? && day.edit_attendance_request_status != "なし" %>
           </td>
         </tr>
       <% end %>
@@ -141,7 +144,7 @@
         <td rowspan="2">累計残業時間</td>
         <td></td>
         <% if current_user == @user %>
-          <td>所属長承認：<%= %></td>
+          <td>所属長承認：</td>
         <% else %>
           <td></td>
         <% end %>
@@ -159,7 +162,8 @@
         <td rowspan="2"></td>
         <% if current_user == @user %>
           <td>
-            <%= form_with url: user_attendance_path(@user), method: :patch, local: true do |f|  %>
+            <%= form_with(model: @user, url: attendances_request_one_month_user_path(date: @first_day), method: :patch, local: true) do |f|  %>
+              <%= f.hidden_field :one_month_request_status, value: "申請中" %>
               <%= f.collection_select :boss, @superiors, :id, :name, {:include_blank => "選択してください。"}, {class: "form-control"} %>
           </td>
         </tr>
@@ -168,7 +172,6 @@
           <td><%= f.submit "申請", class: "btn btn-default btn-primary btn-request form-control" %></td>
         </tr>
         <% end %>
-      <% else %>
       <td rowspan="2"></td>
       <% end %>
     </tfoot>
@@ -184,4 +187,6 @@
 <% if current_user == @user %>
   <div id="receive-overtime" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
   <div id="request-overtime" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
+  <div id="receive-change-attendance-request" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
+  <div id="receive-one-month-request" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
 <% end %>

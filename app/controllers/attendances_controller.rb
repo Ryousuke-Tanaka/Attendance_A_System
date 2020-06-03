@@ -79,6 +79,8 @@ class AttendancesController < ApplicationController
         decision_overtime = Attendance.find(id)
         if params[:user][:attendances][id][:change] == "true"
           decision_overtime.update_attributes!(item)
+        else
+          flash[:danger] = "変更にチェックを入れてください。"
         end
       end
     end
@@ -86,10 +88,27 @@ class AttendancesController < ApplicationController
     redirect_to user_url(current_user, date: params[:date])
   rescue ActiveRecord::RecordInvalid
     flash[:danger] = "無効な入力があった為、更新をキャンセルしました。"
-    redirect_to user_url(date: params[:date])
+    redirect_to user_url(current_user, date: params[:date])
   end
-
-
+  
+  # 1ヶ月分の勤怠情報の承認・否認
+  def request_one_month
+    @attendance = Attendance.find_by(worked_on: params[:date])
+    ActiveRecord::Base.transaction do
+      decision_one_month_params.each do |id, item|
+        decision_one_month = Attendance.find(id)
+        decision_one_month.update_attributes!(item)
+      end
+    end
+    flash[:success] = "1ヶ月分の勤怠承認を申請しました。"
+    redirect_to user_url(current_user, date: params[:date])
+  rescue ActiveRecord::RecordInvalid
+    flash[:danger] = "無効な入力があった為、更新をキャンセルしました。"
+    redirect_to user_url(current_user, date: params[:date])
+  end
+  
+  def receive_one_month_request
+  end
   
   # 勤怠ログ
   def edit_log
@@ -111,5 +130,10 @@ class AttendancesController < ApplicationController
     # 残業承認時のストロングパラメータ
     def decision_overtime_params
       params.require(:user).permit(attendances: [:overtime_request_status])[:attendances]
+    end
+    
+    # 1ヶ月分の勤怠承認時のストロングパラメータ
+    def decision_one_month_params
+      params.require(:user).permit(attendances: [:boss, :one_month_request_status])[:attendances]
     end
 end
