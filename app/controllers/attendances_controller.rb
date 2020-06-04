@@ -37,9 +37,10 @@ class AttendancesController < ApplicationController
   def update_one_month
     ActiveRecord::Base.transaction do
       attendances_params.each do |id, item|
-        if (item)[:note].present? && (item)[:boss].present?
+        if (item)[:after_started_at].present? && (item)[:after_finished_at].present? && (item)[:boss].present?
           attendance = Attendance.find(id)
-          attendance.edit_attendance_request_status = "申請中"        
+          attendance.edit_attendance_request_status = "申請中" 
+          attendance.update_attributes!(item)
         end
       end
     end
