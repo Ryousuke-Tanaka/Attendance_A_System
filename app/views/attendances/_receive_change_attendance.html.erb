@@ -55,10 +55,10 @@
                 <tr>
                   <td><%= l(day.worked_on, format: :short) %></td>
                   <td class="<%= day_of_week_color %>"><%= $days_of_the_week[day.worked_on.wday]%></td>
+                  <td><%= day.previous_changes.started_at.hour if day.started_at.present? %></td>
                   <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
+                  <td><%= day.started_at.hour if day.started_at.present? %></td>
+                  <td><%= set_minutes(day.started_at) if day.started_at.present? %></td>
                   <td><%= day.note %></td>
                   <td><%= attendance.select :edit_attendance_request_status, Attendance.edit_attendance_request_statuses.keys.to_a, {}, class: "form-control" %></td>
                   <td><%= attendance.check_box :change, { class: "check_box" }, true, false %></td>
