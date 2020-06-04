@@ -99,8 +99,13 @@
           <td><%= link_to "残業申請", attendances_request_overtime_user_path(date: day.worked_on), remote: true, class: "btn btn-default btn-primary" if current_user == @user %></td>
           <td><%= l(day.worked_on, format: :short) %></td>
           <td class="<%= day_of_week_color %>"><%= $days_of_the_week[day.worked_on.wday] %></td>
-          <td><%= day.started_at.hour if day.started_at.present? %></td>
-          <td><%= set_minutes(day.started_at) if day.started_at.present? %></td>
+          <% if day.after_started_at.nil? || day.edit_attendance_request_status == "否認" %>
+            <td><%= day.started_at.hour if day.started_at.present? %></td>
+            <td><%= set_minutes(day.started_at) if day.started_at.present? %></td>
+          <% else %>
+            <td><%= day.after_started_at.hour %></td>
+            <td><%= set_minutes(day.after_started_at) %></td>
+          <% end %>
           <% if current_user == @user %>
             <td>
               <% if btn_text = attendance_state(day) %>
@@ -110,8 +115,13 @@
           <% else %>
             <td></td>
           <% end %>
-          <td><%= day.finished_at.hour if day.finished_at.present? %></td>
-          <td><%= set_minutes(day.finished_at) if day.finished_at.present? %></td>
+          <% if day.after_finished_at.nil? || day.edit_attendance_request_status == "否認" %>
+            <td><%= day.finished_at.hour if day.finished_at.present? %></td>
+            <td><%= set_minutes(day.finished_at) if day.finished_at.present? %></td>
+          <% else %>
+            <td><%= day.after_finished_at.hour %></td>
+            <td><%= set_minutes(day.after_finished_at) %></td>
+          <% end %>
           <td></td>
           <td>
             <% if day.started_at.present? && day.finished_at.present? %>
@@ -130,8 +140,8 @@
             <% end %>
           </td>
           <td><%= day.job_description %></td>
-          <td><%= User.find(day.boss).name + "　残業" + day.overtime_request_status if day.boss.present? && day.overtime_request_status != "なし" %><br>
-              <%= User.find(day.boss).name + "　勤怠編集" + day.edit_attendance_request_status if day.boss.present? && day.edit_attendance_request_status != "なし" %>
+          <td><%= User.find(day.boss).name + "　勤怠編集" + day.edit_attendance_request_status if day.boss.present? && day.edit_attendance_request_status != "なし" %><br>
+              <%= User.find(day.boss).name + "　残業" + day.overtime_request_status if day.boss.present? && day.overtime_request_status != "なし" %>
           </td>
         </tr>
       <% end %>

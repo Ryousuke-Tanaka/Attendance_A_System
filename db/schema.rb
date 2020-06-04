@@ -16,8 +16,8 @@ ActiveRecord::Schema.define(version: 20200523235516) do
     t.date "worked_on"
     t.datetime "started_at"
     t.datetime "finished_at"
-    t.datetime "before_started_at"
-    t.datetime "before_finished_at"
+    t.datetime "after_started_at"
+    t.datetime "after_finished_at"
     t.string "note"
     t.integer "user_id"
     t.datetime "created_at", null: false

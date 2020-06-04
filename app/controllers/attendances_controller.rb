@@ -1,7 +1,7 @@
 class AttendancesController < ApplicationController
-  before_action :set_user, only: [:edit_one_month, :update_one_month, :request_overtime, :update_overtime, :receive_overtime, :receive_change_attendance]
-  before_action :logged_in_user, only: [:update, :edit_one_month, :request_overtime, :update_overtime]
-  before_action :correct_user, only: [:request_overtime, :receive_overtime]
+  before_action :set_user, only: [:edit_one_month, :update_one_month, :request_overtime, :update_overtime, :receive_overtime, :receive_change_attendance, :update_change_attendance]
+  before_action :logged_in_user, only: [:update, :edit_one_month, :request_overtime, :update_overtime, :receive_change_attendance, :update_change_attendance]
+  before_action :correct_user, only: [:request_overtime, :receive_overtime, :receive_change_attendance]
   before_action :superior_or_correct_user, only: :update_overtime
   before_action :admin_or_correct_user, only: [:update, :edit_one_month]
   before_action :set_one_month, only: [:edit_one_month, :request_overtime]
@@ -29,7 +29,7 @@ class AttendancesController < ApplicationController
     redirect_to @user
   end
   
-  # 勤怠修正
+  # 勤怠修正ページへ
   def edit_one_month
   end
   
@@ -37,10 +37,9 @@ class AttendancesController < ApplicationController
   def update_one_month
     ActiveRecord::Base.transaction do
       attendances_params.each do |id, item|
-        if (item)[:note].present?
+        if (item)[:note].present? && (item)[:boss].present?
           attendance = Attendance.find(id)
           attendance.edit_attendance_request_status = "申請中"        
-          attendance.update_attributes!(item)
         end
       end
     end
@@ -62,6 +61,10 @@ class AttendancesController < ApplicationController
       change_attendance_params.each do |id, item|
         change_attendance = Attendance.find(id)
         if params[:user][:attendances][id][:change] == "true"
+          if change_attendance.started_at.nil? || change_attendance.finished_at.nil?
+            change_attendance.started_at = change_attendance.after_started_at
+            change_attendance.finished_at = change_attendance.after_finished_at
+          end
           change_attendance.update_attributes!(item)
         else
           flash[:danger] = "変更にチェックを入れてください。"
@@ -151,10 +154,10 @@ class AttendancesController < ApplicationController
   
     # 1ヶ月分の勤怠情報を扱う
     def attendances_params
-      params.require(:user).permit(attendances: [:started_at, :finished_at, :note, :spread_day, :boss])[:attendances]
+      params.require(:user).permit(attendances: [:started_at, :finished_at, :after_started_at, :after_finished_at, :note, :spread_day, :boss])[:attendances]
     end
     
-    # 勤怠情報修正時のストロングパラメータ
+    # 勤怠情報修正承認・否認時のストロングパラメータ
     def change_attendance_params
       params.require(:user).permit(attendances: [:edit_attendance_request_status])[:attendances]
     end
@@ -164,12 +167,12 @@ class AttendancesController < ApplicationController
       params.require(:user).permit(attendances: [:estimated_finished_time, :spread_day, :job_description, :boss, :overtime_request_status])[:attendances]
     end
     
-    # 残業承認時のストロングパラメータ
+    # 残業承認・否認時のストロングパラメータ
     def decision_overtime_params
       params.require(:user).permit(attendances: [:overtime_request_status])[:attendances]
     end
     
-    # 1ヶ月分の勤怠承認時のストロングパラメータ
+    # 1ヶ月分の勤怠承認・否認時のストロングパラメータ
     def decision_one_month_params
       params.require(:user).permit(attendances: [:boss, :one_month_request_status])[:attendances]
     end
