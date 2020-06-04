@@ -27,7 +27,7 @@ class Attendance < ApplicationRecord
   
   
   def finished_at_is_invalid_without_a_started_at
-    errors.add(:started_at, "が必要です")if started_at.blank? && finished_at.present?
+    errors.add(:started_at, "が必要です")if (started_at.blank? && finished_at.present?) || (after_finished_at.blank? && after_finished_at.present?)
   end
   
   def started_at_is_invalid_without_a_finished_at

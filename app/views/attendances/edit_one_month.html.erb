@@ -40,6 +40,8 @@
               <td>
                 <% if day.started_at.present? && day.finished_at.present? %>
                   <%= working_times(day.started_at, day.finished_at, day.spread_day) %>
+                <% elsif day.after_started_at.present? && day.after_finished_at.present? %>
+                  <%= working_times(day.after_started_at, day.after_finished_at, day.spread_day) %>
                 <% end %>
               </td>
               <td><%= attendance.text_field :note, placeholder: "変更理由を入力してください。", class: "form-control" if Date.current >= day.worked_on %></td>

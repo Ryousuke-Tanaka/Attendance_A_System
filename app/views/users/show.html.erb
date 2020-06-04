@@ -29,13 +29,13 @@
 <div class="request-display">
   <% if @user.superior && current_user == @user %>
     <p>【所属長承認申請のお知らせ】<%= link_to "通知が#{@one_month_requests.count}件あります。", attendances_receive_one_month_request_user_path(@user), remote: true,
-        class: "receive-one-month-request-link" if @one_month_requests.present? %>
+        class: "receive-request-link" if @one_month_requests.present? %>
     </p>
     <p>【勤怠変更申請のお知らせ】<%= link_to "通知が#{@change_attendance_requests.count}件あります。", attendances_receive_change_attendance_user_path(@user), remote: true,
-        class: "receive-change-attendance-link" if @change_attendance_requests.present? %>
+        class: "receive-request-link" if @change_attendance_requests.present? %>
     </p>
     <p>【残業申請のお知らせ】<%= link_to "通知が#{@overtime_requests.count}件あります。", attendances_receive_overtime_user_path(@user), remote: true,
-        class: "receive-overtime-link" if @overtime_requests.present? %>
+        class: "receive-request-link" if @overtime_requests.present? %>
     </p>
   <% end %>
 </div>
@@ -175,13 +175,18 @@
         </tr>
         
         <tr>
-          <td><%= f.submit "申請", class: "btn btn-default btn-primary btn-request form-control" %></td>
+          <% if @attendances.one_month_request_status == "否認" %>
+            <td><%= f.submit "再申請", class: "btn btn-default btn-primary btn-request form-control" %></td>
+          <% elsif @attendances.one_month_request_status == "申請中" %>
+            <td><%= f.submit "申請先変更", class: "btn btn-default btn-primary btn-request form-control" %></td>
+          <% else %>
+            <td><%= f.submit "申請", class: "btn btn-default btn-primary btn-request form-control" %></td>
+          <% end %>
         </tr>
           <% end %>
         <% else %>
           <tr>
-            <td>ああああ
-            </td>
+            <td><%= @attendances.boss + @attendances.one_month_request_status %></td>
           </tr>
         <% end %>
     </tfoot>
