@@ -170,8 +170,12 @@
         <% if current_user == @user %>
           <td>
             <%= form_with(model: @user, url: attendances_request_one_month_user_path(date: @first_day), method: :patch, local: true) do |f|  %>
-              <%= f.hidden_field :one_month_request_status, value: "申請中" %>
-              <%= f.collection_select :boss, @superiors, :id, :name, {:include_blank => "選択してください。"}, {class: "form-control"} %>
+              <% @attendances.each do |day| %>
+                <%= f.fields_for "attendances[]", day do |attendance| %>
+                  <%= attendance.hidden_field :one_month_request_status, value: "申請中" %>
+                  <%= attendance.collection_select :boss, @superiors, :id, :name, {:include_blank => "選択してください。"}, {class: "form-control"} %>
+                <% end %>
+              <% end %>
           </td>
         </tr>
         
