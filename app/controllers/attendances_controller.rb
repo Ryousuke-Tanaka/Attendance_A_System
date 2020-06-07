@@ -1,14 +1,15 @@
 class AttendancesController < ApplicationController
-  before_action :set_user, only: [:edit_one_month, :update_one_month, :request_overtime, :update_overtime, :receive_overtime, :receive_change_attendance, :update_change_attendance]
+  before_action :set_user, only: [:edit_one_month, :update_one_month, :request_overtime, :update_overtime, :receive_overtime, :receive_change_attendance, :update_change_attendance, :edit_log]
   before_action :logged_in_user, only: [:update, :edit_one_month, :request_overtime, :update_overtime, :receive_change_attendance, :update_change_attendance]
   before_action :correct_user, only: [:request_overtime, :receive_overtime, :receive_change_attendance]
   before_action :superior_or_correct_user, only: :update_overtime
   before_action :admin_or_correct_user, only: [:update, :edit_one_month]
-  before_action :set_one_month, only: [:edit_one_month, :request_overtime]
+  before_action :set_one_month, only: [:edit_one_month, :request_overtime, :edit_log]
   before_action :select_superiors, only: [:edit_one_month, :update_one_month, :request_overtime, :update_overtime]
   
   UPDATE_ERROR_MSG = "勤怠登録に失敗しました。やり直してください。"
 
+  # 出退勤ボタンの勤怠登録
   def update
     @user = User.find(params[:user_id])
     @attendance = Attendance.find(params[:id])
@@ -148,6 +149,12 @@ class AttendancesController < ApplicationController
   
   # 勤怠ログ
   def edit_log
+    @approval_change_attendance_requests = Attendance.where(user_id: @user, edit_attendance_request_status: "承認")
+    
+  end
+  
+  # 勤怠ログ検索
+  def attendance_log_search
   end
   
   

@@ -171,22 +171,12 @@
             <%= form_with(model: @user, url: attendances_request_one_month_user_path(date: @first_day), method: :patch, local: true) do |f|  %>
               <%= f.hidden_field :one_month_request_status, value: "申請中" %>
               <%= f.collection_select :boss, @superiors, :id, :name, {:include_blank => "選択してください。"}, {class: "form-control"} %>
+            <% end %>
           </td>
         </tr>
         
         <tr>
-          <% if @attendances.one_month_request_status == "否認" %>
-            <td><%= f.submit "再申請", class: "btn btn-default btn-primary btn-request form-control" %></td>
-          <% elsif @attendances.one_month_request_status == "申請中" %>
-            <td><%= f.submit "申請先変更", class: "btn btn-default btn-primary btn-request form-control" %></td>
-          <% else %>
-            <td><%= f.submit "申請", class: "btn btn-default btn-primary btn-request form-control" %></td>
-          <% end %>
-        </tr>
-          <% end %>
-        <% else %>
-          <tr>
-            <td><%= @attendances.boss + @attendances.one_month_request_status %></td>
+         
           </tr>
         <% end %>
     </tfoot>
