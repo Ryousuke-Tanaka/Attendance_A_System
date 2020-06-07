@@ -1,4 +1,5 @@
 <% provide(:title, @user.name) %>
+
 <div>
   <table class="table table-bordered table-condensed user-table">
     <tr>
@@ -171,14 +172,26 @@
             <%= form_with(model: @user, url: attendances_request_one_month_user_path(date: @first_day), method: :patch, local: true) do |f|  %>
               <%= f.hidden_field :one_month_request_status, value: "申請中" %>
               <%= f.collection_select :boss, @superiors, :id, :name, {:include_blank => "選択してください。"}, {class: "form-control"} %>
-            <% end %>
           </td>
         </tr>
         
-        <tr>
-         
+        <% if current_user == @user %>
+          <tr>
+            <% if @attendance.one_month_request_status == "否認" %>
+              <td><%= f.submit "再申請", class: "btn btn-default btn-primary btn-request form-control" %></td>
+            <% elsif @attendance.one_month_request_status == "申請中" %>
+              <td><%= f.submit "申請先変更", class: "btn btn-default btn-primary btn-request form-control" %></td>
+            <% else %>
+              <td><%= f.submit "申請", class: "btn btn-default btn-primary btn-request form-control" %></td>
+            <% end %>
+          <% end %>
           </tr>
         <% end %>
+        <% else %>
+      <tr>
+        <td>所属長承認 <%= User.find(@attendance.boss).name + " " + @attendance.one_month_request_status %></td>
+      </tr>
+      <% end %>
     </tfoot>
   </table>
   

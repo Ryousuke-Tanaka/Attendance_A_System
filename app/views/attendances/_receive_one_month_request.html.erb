@@ -1,0 +1,53 @@
+<% provide(:class_text, 'receive_one_month_request') %>
+<% provide(:button_text, '変更を送信する') %>
+
+
+<div class="modal-dialog modal-lg modal-dialog-center">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <%= form_with(model: @user, url: attendances_decision_one_month_attendance_user_path, local: true, method: :patch) do |f| %>
+        <% @receive_one_month_requests.each do |key, receive_one_month_request| %>
+          <table class="table table-bordered">
+                
+            <thead>
+              <tr>
+                <% @member = User.find(key) %>
+                <h1 class="modal-title"><%= User.find(key).name %>からの1ヶ月分の勤怠申請</h1>
+                <th>月</th>
+                <th>指示者確認㊞</th>
+                <th>変更</th>
+                <th>勤怠を確認する</th>
+              </tr>
+            </thead>
+                    
+            <tbody>
+              <% receive_one_month_requests.each do |day| %>
+                <%= f.fields_for "attendances[]", day do |attendance| %>
+                <tr>
+                  <td><%= day.worked_on.strftime("%M") %></td>
+                  <td><%= attendance.select :one_month_request_status, Attendance.one_month_request_status.keys.to_a, {}, class: "form-control" %></td>
+                  <td><%= attendance.check_box :change, { class: "check_box" }, true, false %></td>
+                  <td><%= link_to "確認",user_path(id: @member, date: day.worked_on.beginning_of_month), class: "btn btn-primary btn-#{yield(:class_text)}" %></td>
+                </tr>
+              <% end %>
+            <% end %>
+          </tbody>
+        </table>
+       <% end %>
+          
+      <table>
+        <div class="footer-button">
+          <%= f.submit yield(:button_text), class: "btn btn-primary btn-#{yield(:class_text)}" %>
+            <button type="button" class="btn btn-default btn-<%= yield(:class_text) %>" data-dismiss="modal">
+              キャンセル
+            </button>
+        </div>
+      </table>
+    <% end %>
+  </div>
+</div>

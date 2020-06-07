@@ -127,13 +127,13 @@ class AttendancesController < ApplicationController
     redirect_to user_url(current_user, date: params[:date])
   end
   
-  # 1ヶ月分の勤怠情報の承認・否認
+  # 社員による1ヶ月分の勤怠情報の申請
   def request_one_month
     @attendance = Attendance.find_by(worked_on: params[:date])
     ActiveRecord::Base.transaction do
-      decision_one_month_params.each do |id, item|
-        decision_one_month = Attendance.find(id)
-        decision_one_month.update_attributes!(item)
+      one_month_attendance_params.each do |id, item|
+        one_month_attendance_params = Attendance.find(id)
+        one_month_attendance_params.update_attributes!(item)
       end
     end
     flash[:success] = "1ヶ月分の勤怠承認を申請しました。"
@@ -143,14 +143,35 @@ class AttendancesController < ApplicationController
     redirect_to user_url(current_user, date: params[:date])
   end
   
+  # 上長が1ヶ月分の勤怠情報を受領
   def receive_one_month_request
-    @receive_one_month_requests = Attendance.where(boss: @user.id, one_month_request_status: "申請中").group_by(&:user_id)
+    receive_one_month_requests = Attendance.where(boss: @user.id, one_month_request_status: "申請中").group_by(&:user_id)
+    @receive_one_month_requests = receive_one_month_requests.select(:worked_on).month.distinct
+    
+  end
+  
+  # 上長の1ヶ月分の勤怠情報の承認・否認
+  def decision_one_month_attendance
+    ActiveRecord::Base.transaction do
+      decision_one_month_attendance_params.each do |id, item|
+        decision_one_month_attendance_params = Attendance.find(id)
+        if params[:user][:attendances][id][:change] == "true"
+          decision_one_month_attendance_params.update_attributes!(item)
+        else
+          flash[:danger] = "変更にチェックを入れてください。"
+        end
+      end
+    end
+    flash[:success] = "1ヶ月勤怠申請の決裁を更新しました。"
+    redirect_to user_url(current_user, date: params[:date])
+  rescue ActiveRecord::RecordInvalid
+    flash[:danger] = "無効な入力があった為、更新をキャンセルしました。"
+    redirect_to user_url(current_user, date: params[:date])
   end
   
   # 勤怠ログ
   def edit_log
     @approval_change_attendance_requests = Attendance.where(user_id: @user, edit_attendance_request_status: "承認")
-    
   end
   
   # 勤怠ログ検索
@@ -180,8 +201,13 @@ class AttendancesController < ApplicationController
       params.require(:user).permit(attendances: [:overtime_request_status])[:attendances]
     end
     
-    # 1ヶ月分の勤怠承認・否認時のストロングパラメータ
-    def decision_one_month_params
+    # 1ヶ月分の勤怠申請時のストロングパラメータ
+    def one_month_attendance_params
       params.require(:user).permit(attendances: [:boss, :one_month_request_status])[:attendances]
+    end
+    
+    # 1ヶ月分の勤怠承認・否認時のストロングパラメータ
+    def decision_one_month_attendance_params
+      params.require(:user).permit(attendances: [:one_month_request_status])[:attendances]
     end
 end
