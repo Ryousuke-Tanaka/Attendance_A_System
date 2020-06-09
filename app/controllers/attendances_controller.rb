@@ -1,5 +1,6 @@
 class AttendancesController < ApplicationController
-  before_action :set_user, only: [:edit_one_month, :update_one_month, :request_overtime, :update_overtime, :receive_overtime, :receive_change_attendance, :update_change_attendance, :edit_log]
+  before_action :set_user, only: [:edit_one_month, :update_one_month, :request_overtime, :update_overtime, :receive_overtime, :receive_change_attendance, 
+                :update_change_attendance, :receive_one_month_request, :edit_log]
   before_action :logged_in_user, only: [:update, :edit_one_month, :request_overtime, :update_overtime, :receive_change_attendance, :update_change_attendance]
   before_action :correct_user, only: [:request_overtime, :receive_overtime, :receive_change_attendance]
   before_action :superior_or_correct_user, only: :update_overtime
@@ -129,8 +130,8 @@ class AttendancesController < ApplicationController
   
   # 社員による1ヶ月分の勤怠情報の申請
   def request_one_month
-    @attendance = Attendance.find_by(worked_on: params[:date])
     ActiveRecord::Base.transaction do
+      one_month_attendance_params
       one_month_attendance_params.each do |id, item|
         one_month_attendance_params = Attendance.find(id)
         one_month_attendance_params.update_attributes!(item)
@@ -145,9 +146,7 @@ class AttendancesController < ApplicationController
   
   # 上長が1ヶ月分の勤怠情報を受領
   def receive_one_month_request
-    receive_one_month_requests = Attendance.where(boss: @user.id, one_month_request_status: "申請中").group_by(&:user_id)
-    @receive_one_month_requests = receive_one_month_requests.select(:worked_on).month.distinct
-    
+    @receive_one_month_requests = Attendance.where(boss: @user.id, one_month_request_status: "申請中").group_by(&:user_id)
   end
   
   # 上長の1ヶ月分の勤怠情報の承認・否認
