@@ -19,7 +19,7 @@ class UsersController < ApplicationController
     @overtime_requests = Attendance.where(boss: @user.id, overtime_request_status: "申請中")
     @one_month_requests = Attendance.where(boss: @user.id, one_month_request_status: "申請中")
     @change_attendance_requests = Attendance.where(boss: @user.id, edit_attendance_request_status: "申請中")
-    @one_month_attendance = @user.attendances.where(worked_on: @first_day..@last_day).group(:receive_one_month_request)
+    @one_month_attendance = @user.attendances.where(worked_on: @first_day..@last_day).group("attendances.worked_on.month")
     @attendance = @attendances.first
   end
   

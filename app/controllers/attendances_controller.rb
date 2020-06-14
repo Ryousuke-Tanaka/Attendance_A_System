@@ -1,6 +1,6 @@
 class AttendancesController < ApplicationController
-  before_action :set_user, only: [:edit_one_month, :update_one_month, :request_overtime, :update_overtime, :receive_overtime, :receive_change_attendance, 
-                :update_change_attendance, :receive_one_month_request, :edit_log]
+  before_action :set_user, only: [:edit_one_month, :update_one_month, :request_overtime, :update_overtime, :receive_overtime, :receive_change_attendance, :request_one_month,
+                                  :update_change_attendance, :receive_one_month_request, :edit_log]
   before_action :logged_in_user, only: [:update, :edit_one_month, :request_overtime, :update_overtime, :receive_change_attendance, :update_change_attendance]
   before_action :correct_user, only: [:request_overtime, :receive_overtime, :receive_change_attendance]
   before_action :superior_or_correct_user, only: :update_overtime
@@ -130,11 +130,13 @@ class AttendancesController < ApplicationController
   
   # 社員による1ヶ月分の勤怠情報の申請
   def request_one_month
+    @first_day = params[:date].nil? ?
+    Date.current.beginning_of_month : params[:date].to_date
+    @last_day = @first_day.end_of_month
+    @attendances = @user.attendances.where(worked_on: @first_day..@last_day).order(:worked_on)
     ActiveRecord::Base.transaction do
-      one_month_attendance_params
-      one_month_attendance_params.each do |id, item|
-        one_month_attendance_params = Attendance.find(id)
-        one_month_attendance_params.update_attributes!(item)
+      @attendances.each do |attendance|
+        attendance.update_attributes!(one_month_attendance_params)
       end
     end
     flash[:success] = "1ヶ月分の勤怠承認を申請しました。"
