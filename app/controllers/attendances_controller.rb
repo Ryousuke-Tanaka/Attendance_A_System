@@ -130,13 +130,10 @@ class AttendancesController < ApplicationController
   
   # 社員による1ヶ月分の勤怠情報の申請
   def request_one_month
-    @first_day = params[:date].nil? ?
-    Date.current.beginning_of_month : params[:date].to_date
-    @last_day = @first_day.end_of_month
-    @attendances = @user.attendances.where(worked_on: @first_day..@last_day).order(:worked_on)
+    @one_month_attendances = Attendance.where(user_id: current_user, worked_on: params[:date].in_time_zone.all_month)
     ActiveRecord::Base.transaction do
-      @attendances.each do |attendance|
-        attendance.update_attributes!(one_month_attendance_params)
+      @one_month_attendances.each do |one_month_attendance|
+        one_month_attendance.update_attributes!(one_month_attendance_params)
       end
     end
     flash[:success] = "1ヶ月分の勤怠承認を申請しました。"

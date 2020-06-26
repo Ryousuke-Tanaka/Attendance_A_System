@@ -179,7 +179,7 @@
         
         <% if current_user == @user %>
           <tr>
-            <% if @attendance.one_month_request_status == "否認" %>
+            <% if @attendance.one_month_request_status =="否認" %>
               <td><%= f.submit "再申請", class: "btn btn-default btn-primary btn-request form-control" %></td>
             <% elsif @attendance.one_month_request_status == "申請中" %>
               <td><%= f.submit "申請先変更", class: "btn btn-default btn-primary btn-request form-control" %></td>
