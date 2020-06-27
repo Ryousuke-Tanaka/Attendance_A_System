@@ -14,6 +14,7 @@ ActiveRecord::Schema.define(version: 20200523235516) do
 
   create_table "attendances", force: :cascade do |t|
     t.date "worked_on"
+    t.date "one_month"
     t.datetime "started_at"
     t.datetime "finished_at"
     t.datetime "after_started_at"

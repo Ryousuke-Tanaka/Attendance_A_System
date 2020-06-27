@@ -26,16 +26,15 @@
             </thead>
                     
             <tbody>
-              <% receive_one_month_request.each do |day| %>
-                <%= f.fields_for "attendances[]", day do |attendance| %>
+              
+                <%= f.fields_for :attendances do |attendance| %>
                 <tr>
-                  <td><%= day.worked_on.month %></td>
+                  <td><%= Attendance.find(key).worked_on.month %></td>
                   <td><%= attendance.select :one_month_request_status, Attendance.one_month_request_statuses.keys.to_a, {}, class: "form-control" %></td>
                   <td><%= attendance.check_box :change, { class: "check_box" }, true, false %></td>
-                  <td><%= link_to "確認",user_path(id: @member, date: day.worked_on.beginning_of_month), class: "btn btn-primary btn-#{yield(:class_text)}" %></td>
+                  <td><%= link_to "確認",user_path(id: @member, date: Attendance.find(key).worked_on.beginning_of_month), class: "btn btn-primary btn-#{yield(:class_text)}" %></td>
                 </tr>
               <% end %>
-            <% end %>
           </tbody>
         </table>
        <% end %>

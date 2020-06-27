@@ -97,8 +97,13 @@ class AttendancesController < ApplicationController
     @user = User.find(params[:id])
     ActiveRecord::Base.transaction do
       overtime_info_params.each do |id, item|
-        @overtime = Attendance.find(id)
-        @overtime.update_attributes!(item)
+        if params[:user][:attendances][id][:boss].present? 
+          @overtime = Attendance.find(id)
+          @overtime.update_attributes!(item)
+        else
+          flash[:danger] = "無効な入力があった為、更新をキャンセルしました。"
+          redirect_to user_url(date: params[:date]) and return
+        end
       end
     end
     @superior = User.find(@overtime.boss)
@@ -152,11 +157,11 @@ class AttendancesController < ApplicationController
   
   # 上長の1ヶ月分の勤怠情報の承認・否認
   def decision_one_month_attendance
+    @one_month_attendances = Attendance.where(worked_on: params[:date].in_time_zone.all_month)
     ActiveRecord::Base.transaction do
-      decision_one_month_attendance_params.each do |id, item|
-        decision_one_month_attendance_params = Attendance.find(id)
+      @one_month_attendances.each do |one_month_attendance|
         if params[:user][:attendances][id][:change] == "true"
-          decision_one_month_attendance_params.update_attributes!(item)
+          one_month_attendance.update_attributes!(decision_one_month_attendance_params)
         else
           flash[:danger] = "変更にチェックを入れてください。"
         end
