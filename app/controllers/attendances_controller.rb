@@ -132,8 +132,10 @@ class AttendancesController < ApplicationController
   def request_one_month
     @one_month_attendances = Attendance.where(user_id: current_user, worked_on: params[:date].in_time_zone.all_month)
     ActiveRecord::Base.transaction do
-      @one_month_attendances.each do |one_month_attendance|
-        one_month_attendance.update_attributes!(one_month_attendance_params)
+      unless params[:user][:attendances][:boss].nil?
+        @one_month_attendances.each do |one_month_attendance|
+          one_month_attendance.update_attributes!(one_month_attendance_params)
+        end
       end
     end
     flash[:success] = "1ヶ月分の勤怠承認を申請しました。"
