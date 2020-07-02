@@ -137,10 +137,13 @@ class AttendancesController < ApplicationController
   def request_one_month
     @one_month_attendances = Attendance.where(user_id: current_user, worked_on: params[:date].in_time_zone.all_month)
     ActiveRecord::Base.transaction do
-      unless params[:user][:attendances][:boss].nil?
+      if params[:user][:attendances][:boss].present?
         @one_month_attendances.each do |one_month_attendance|
           one_month_attendance.update_attributes!(one_month_attendance_params)
         end
+      else
+        flash[:danger] = "上長を選択してください。"
+        redirect_to user_url(current_user, date: params[:date]) and return
       end
     end
     flash[:success] = "1ヶ月分の勤怠承認を申請しました。"
@@ -157,10 +160,10 @@ class AttendancesController < ApplicationController
   
   # 上長の1ヶ月分の勤怠情報の承認・否認
   def decision_one_month_attendance
-    @one_month_attendances = Attendance.where(worked_on: params[:date].in_time_zone.all_month)
+    @one_month_attendances = Attendance.find_by(params[:user_id], [:one_month])
     ActiveRecord::Base.transaction do
       @one_month_attendances.each do |one_month_attendance|
-        if params[:user][:attendances][id][:change] == "true"
+        if params[:user][:attendances][:id][:change] == "true"
           one_month_attendance.update_attributes!(decision_one_month_attendance_params)
         else
           flash[:danger] = "変更にチェックを入れてください。"

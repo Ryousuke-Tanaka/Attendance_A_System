@@ -11,13 +11,13 @@
     </div>
     <div class="modal-body">
       <%= form_with(model: @user, url: attendances_decision_one_month_attendance_user_path, local: true, method: :patch) do |f| %>
-        <% @receive_one_month_requests.each do |key, receive_one_month_request| %>
+        <% @receive_one_month_requests.each do |receive_one_month_request| %>
           <table class="table table-bordered">
                 
             <thead>
               <tr>
-                <% @member = User.find(key) %>
-                <h1 class="modal-title"><%= User.find(key).name %>からの1ヶ月分の勤怠申請</h1>
+                <% @member = User.find(receive_one_month_request.user_id) %>
+                <h1 class="modal-title"><%= User.find(receive_one_month_request.user_id).name %>からの1ヶ月分の勤怠申請</h1>
                 <th>月</th>
                 <th>指示者確認㊞</th>
                 <th>変更</th>
@@ -26,8 +26,8 @@
             </thead>
                     
             <tbody>
-              
-                <%= f.fields_for :attendances do |attendance| %>
+              <% receive_one_month_request.each do |day| %>
+                <%= f.fields_for "attendances[]", day do |attendance| %>
                 <tr>
                   <td><%= Attendance.find(key).worked_on.month %></td>
                   <td><%= attendance.select :one_month_request_status, Attendance.one_month_request_statuses.keys.to_a, {}, class: "form-control" %></td>
@@ -35,6 +35,7 @@
                   <td><%= link_to "確認",user_path(id: @member, date: Attendance.find(key).worked_on.beginning_of_month), class: "btn btn-primary btn-#{yield(:class_text)}" %></td>
                 </tr>
               <% end %>
+            <% end %>
           </tbody>
         </table>
        <% end %>
