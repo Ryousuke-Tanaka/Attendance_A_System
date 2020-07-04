@@ -27,11 +27,12 @@ Rails.application.routes.draw do
       get 'attendances/receive_overtime'
       patch 'attendances/decision_overtime'
       get 'attendances/edit_log'
-      patch 'attendances/request_one_month'
-      get 'attendances/receive_one_month_request'
-      patch 'attendances/decision_one_month_attendance'     
       get 'attendances/receive_change_attendance'
       patch 'attendances/update_change_attendance'
+      patch 'applies/request_one_month'
+      get 'applies/receive_one_month_request'
+      patch 'applies/decision_one_month_attendance'
+      
     end
     resources :attendances, only: :update
   end

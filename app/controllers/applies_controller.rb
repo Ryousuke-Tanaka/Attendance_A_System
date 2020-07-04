@@ -1,4 +1,4 @@
-class RequestsController < ApplicationController
+class AppliesController < ApplicationController
   before_action :set_user
   before_action :logged_in_user
   before_action :superior_or_correct_user
@@ -6,9 +6,11 @@ class RequestsController < ApplicationController
   before_action :select_superiors
 
   def request_one_month
-    @request = Request.find(params[:id])
     ActiveRecord::Base.transaction do
-      @request.update_attributes!(one_month_request_params)
+      one_month_request_params.each do |id ,item|
+        one_month_request = Apply.find(id)
+        one_month_request.update_attributes!(item)
+      end
     end
     @superior = User.find(params[:id])
     flash[:success] = "#{@superior.name}に1ヶ月分の勤怠申請をしました。"
@@ -19,7 +21,7 @@ class RequestsController < ApplicationController
   end
   
   def receive_one_month_request
-    @receive_one_month_requests = Request.where(boss: @user.id, one_month_request_status: "申請中").group_by(&:user_id)
+    @receive_one_month_requests = Apply.where(boss: @user.id, one_month_request_status: "申請中").group_by(&:user_id)
   end
   
   def decision_one_month_request
@@ -29,12 +31,13 @@ class RequestsController < ApplicationController
   private  
    # 1ヶ月分の勤怠申請時のストロングパラメータ
     def one_month_request_params
-      params.require(:user).permit(request: [:id, :boss, :one_month_request_status])
+      params.require(:user).permit(applies: [:one_month_boss, :one_month_request_status, :id, :_destroy])[:applies]
     end
     
     # 1ヶ月分の勤怠承認・否認時のストロングパラメータ
     def decision_one_month_request_params
-      params.require(:user).permit(requests_attributes: [:id, :one_month_request_status])
+      params.require(:user).permit(applies_attributes: [:one_month_request_status])
     end
   
 end
+

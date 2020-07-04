@@ -1,5 +1,7 @@
 class User < ApplicationRecord
   has_many :attendances, dependent: :destroy
+  has_many :applies, dependent: :destroy
+  accepts_nested_attributes_for :applies, allow_destroy: true
   
   # 「remember_token」という仮想の属性を作成
   attr_accessor :remember_token

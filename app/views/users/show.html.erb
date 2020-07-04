@@ -29,7 +29,7 @@
 
 <div class="request-display">
   <% if @user.superior && current_user == @user %>
-    <p>【所属長承認申請のお知らせ】<%= link_to "通知が#{@one_month_requests.count}件あります。", attendances_receive_one_month_request_user_path(@user), remote: true,
+    <p>【所属長承認申請のお知らせ】<%= link_to "通知が#{@one_month_requests.count}件あります。", applies_receive_one_month_request_user_path(@user), remote: true,
         class: "receive-request-link" if @one_month_requests.present? %>
     </p>
     <p>【勤怠変更申請のお知らせ】<%= link_to "通知が#{@change_attendance_requests.count}件あります。", attendances_receive_change_attendance_user_path(@user), remote: true,
@@ -157,7 +157,7 @@
         <th colspan="3"></th>
         <th>累計残業時間</th>
         <th></th>
-        <th>所属長承認 <%= User.find(@attendance.boss).name + " " + @attendance.one_month_request_status if @attendance.one_month_request_status != "なし" && @attendance.boss.present? %></th>
+        <th>所属長承認 <%= User.find(@one_month_attendance.one_month_boss).name + " " + @one_month_attendance.one_month_request_status if @one_month_attendance.one_month_request_status != "なし" && @one_month_attendance.one_month_boss.present? %></th>
       </tr>
       
       <tr>
@@ -169,15 +169,15 @@
         <td rowspan="2"></td>
         <% if current_user == @user %>
           <td>
-            <%= form_with(model: @user, url: attendances_request_one_month_user_path(date: @first_day), method: :patch, local: true) do |f|  %>
-              <%= f.fields_for :attendances do |attendance| %>
-                <%= attendance.hidden_field :one_month_request_status, value: "申請中" %>
-                <%= attendance.collection_select :boss, @superiors, :id, :name, {:include_blank => "選択してください。"}, {class: "form-control"} %>
+            <%= form_with(model: @user, url: applies_request_one_month_user_path(date: @first_day), method: :patch, local: true) do |f|  %>
+              <%= f.fields_for "applies[]", @one_month_attendance do |apply| %>
+                <%= apply.hidden_field :one_month_request_status, value: "申請中" %>
+                <%= apply.collection_select :one_month_boss, @superiors, :id, :name, {:include_blank => "選択してください。"}, {class: "form-control"} %>
               <% end %>
         
-              <% if @attendance.one_month_request_status =="否認" %>
+              <% if @one_month_attendance.one_month_request_status =="否認" %>
                 <%= f.submit "再申請", data: { confirm: "再申請してよろしいですか？" }, class: "btn btn-default btn-primary btn-request form-control" %>
-              <% elsif @attendance.one_month_request_status == "申請中" %>
+              <% elsif @one_month_attendance.one_month_request_status == "申請中" %>
                 <%= f.submit "申請先変更", data: { confirm: "申請先変更してよろしいですか？" }, class: "btn btn-default btn-primary btn-request form-control" %>
               <% else %>
                 <%= f.submit "申請", data: { confirm: "申請してよろしいですか？" }, class: "btn btn-default btn-primary btn-request form-control" %>
@@ -187,7 +187,7 @@
         </tr>  
         <% else %>
       <tr>
-        <td>所属長承認 <%= User.find(@attendance.boss).name + " " + @attendance.one_month_request_status %></td>
+        <td>所属長承認 <%= User.find(@one_month_attendance.one_month_boss).name + " " + @one_month_attendance.one_month_request_status %></td>
       </tr>
         <% end %>
     </tfoot>

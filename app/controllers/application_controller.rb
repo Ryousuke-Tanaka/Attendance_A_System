@@ -75,14 +75,15 @@ class ApplicationController < ActionController::Base
     one_month = [*@first_day..@last_day]
   
     @attendances = @user.attendances.where(worked_on: @first_day..@last_day).order(:worked_on)
-    @one_month_attendances = Attendance.where(worked_on: @first_day.in_time_zone.all_month).order(:worked_on)
+    @one_month_attendance = @user.applies.where(one_month: @first_day)
   
     unless one_month.count == @attendances.count
       ActiveRecord::Base.transaction do
         one_month.each { |day| @user.attendances.create!(worked_on: day, one_month: @first_day) }
+        @user.applies.create!(one_month: @first_day)
       end
       @attendances = @user.attendances.where(worked_on: @first_day..@last_day).order(:worked_on)
-      @one_month_attendances = Attendance.where(worked_on: @first_day.in_time_zone.all_month).order(:worked_on)
+      @one_month_attendance = @user.applies.where(one_month: @first_day)
     end
   
   rescue ActiveRecord::RecordInvalid
