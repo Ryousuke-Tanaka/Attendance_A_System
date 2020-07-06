@@ -1,9 +1,13 @@
 class AppliesController < ApplicationController
   before_action :set_user
   before_action :logged_in_user
-  before_action :superior_or_correct_user
+  before_action :correct_user
   before_action :set_one_month
+  before_action :superior_user, only: [:receive_one_month_request, :decision_one_month_request]
   before_action :select_superiors
+  
+  NO_CHECK_ERROR_MSG = "変更にチェックがないものは更新できません。"
+  INVALID_ERROR_MSG = "無効な入力があった為、更新をキャンセルしました。"
 
   def request_one_month
     ActiveRecord::Base.transaction do
@@ -21,7 +25,7 @@ class AppliesController < ApplicationController
     flash[:success] = "#{@superior.name}に1ヶ月分の勤怠申請をしました。"
     redirect_to user_url(date: params[:date])
   rescue ActiveRecord::RecordInvalid
-    flash[:danger] = "無効な入力があった為、更新をキャンセルしました。"
+    flash[:danger] = INVALID_ERROR_MSG
     redirect_to user_url(date: params[:date])
   end
   
@@ -36,14 +40,14 @@ class AppliesController < ApplicationController
         if params[:user][:applies][id][:change] == "true"
           decision_one_month_request.update_attributes!(item)
         else
-          flash[:danger] = "変更にチェックを入れてください。"
+          flash[:danger] = NO_CHECK_ERROR_MSG
         end
       end
     end
     flash[:success] = "1ヶ月勤怠申請の決裁を更新しました。"
     redirect_to user_url(current_user, date: params[:date])
   rescue ActiveRecord::RecordInvalid
-    flash[:danger] = "無効な入力があった為、更新をキャンセルしました。"
+    flash[:danger] = INVALID_ERROR_MSG
     redirect_to user_url(date: params[:date])
   end
   

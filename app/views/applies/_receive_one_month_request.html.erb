@@ -12,7 +12,7 @@
     <div class="modal-body">
       <%= form_with(model: @user, url: applies_decision_one_month_request_user_path, local: true, method: :patch) do |f| %>
         <% @receive_one_month_requests.each do |key, receive_one_month_request| %>
-          <table class="table table-bordered">
+          <table class="table table-bordered request-modal">
                 
             <thead>
               <tr>

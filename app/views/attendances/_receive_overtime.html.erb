@@ -12,7 +12,7 @@
     <div class="modal-body">
       <%= form_with(model: @user, url: attendances_decision_overtime_user_path, local: true, method: :patch) do |f| %>
         <% @overtime_requests.each do |key, overtime_requests| %>
-          <table class="table table-bordered">
+          <table class="table table-bordered request-modal">
                 
             <thead>
               <tr>

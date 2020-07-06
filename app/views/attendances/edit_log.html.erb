@@ -2,10 +2,10 @@
   <div class="row form-group">
 
     <div class="col-md-2" id="search-attendance-log">
-      <%= form_with url: (@attendance), method: :get, local: true do |f|  %>
-        <%= f.collection_select :id, @approval_change_attendance_requests, :worked_on, :worked_on, :prompt =>"年" %>
-        <%= f.select :month, 1..12, :prompt =>"月" %>
-        <%= f.submit "検索", class: " btn-primary search-btn" %>
+      <%= form_with url: @attendance, method: :get, local: true do |f|  %>
+        <%= f.collection_select :id, @approval_change_attendance_requests, :worked_on, :worked_on, :prompt =>"年", class: "selectpicker" %>
+        <%= f.select :month, 1..12, :prompt =>"月", class: "form-horizontal" %>
+        <%= f.submit "検索", class: " btn-primary search-btn form-control" %>
       <% end %>
     </div>
     

@@ -62,6 +62,14 @@ class ApplicationController < ActionController::Base
     end
   end
   
+  # 上長か判定
+  def superior_user
+    unless current_user.superior?
+      flash[:danger] = "上長のみ閲覧・編集可能です。"
+      redirect_to root_url
+    end
+  end
+  
   # Userテーブルから上長を取り出す（自分の場合を除く）
   def select_superiors
     @superiors = User.all.where(superior: true).where.not(id: @user)
