@@ -167,6 +167,7 @@
         <td rowspan="2" colspan="3"></td>
         <td rowspan="2"><%= format("%.2f", @total_overtime_times.to_f) %></td>
         <td rowspan="2"></td>
+        
         <% if current_user == @user %>
           <td>
             <%= form_with(model: @user, url: applies_request_one_month_user_path(date: @first_day), method: :patch, local: true) do |f|  %>
