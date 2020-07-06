@@ -29,10 +29,10 @@
               <% receive_one_month_request.each do |day| %>
                 <%= f.fields_for "applies[]", day do |apply| %>
                 <tr>
-                  <td><%= Apply.find(key).one_month %></td>
+                  <td><%= day.one_month.month %></td>
                   <td><%= apply.select :one_month_request_status, Apply.one_month_request_statuses.keys.to_a, {}, class: "form-control" %></td>
                   <td><%= apply.check_box :change, { class: "check_box" }, true, false %></td>
-                  <td><%= link_to "確認",user_path(id: @member, date: Apply.find(key).one_month), class: "btn btn-primary btn-#{yield(:class_text)}" %></td>
+                  <td><%= link_to "確認",user_path(id: @member, date: day.one_month), class: "btn btn-primary btn-#{yield(:class_text)}" %></td>
                 </tr>
               <% end %>
             <% end %>
