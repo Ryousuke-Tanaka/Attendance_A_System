@@ -31,7 +31,7 @@ Rails.application.routes.draw do
       patch 'attendances/update_change_attendance'
       patch 'applies/request_one_month'
       get 'applies/receive_one_month_request'
-      patch 'applies/decision_one_month_attendance'
+      patch 'applies/decision_one_month_request'
       
     end
     resources :attendances, only: :update
