@@ -137,11 +137,12 @@ class AttendancesController < ApplicationController
   
   # 勤怠ログ
   def edit_log
-    @approval_change_attendance_requests = Attendance.where(user_id: @user, edit_attendance_request_status: "承認")
+    @approval_change_attendance_requests = Attendance.where(user_id: current_user, worked_on: "%#{params[:worked_on]}%", edit_attendance_request_status: "承認")
   end
   
   # 勤怠ログ検索
   def attendance_log_search
+    @approval_change_attendance_requests = Attendance.where(user_id: current_user, worked_on: "%#{params[:keyword]}%", edit_attendance_request_status: "承認")
   end
   
   

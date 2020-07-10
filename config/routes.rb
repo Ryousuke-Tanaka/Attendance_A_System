@@ -33,6 +33,8 @@ Rails.application.routes.draw do
       get 'applies/receive_one_month_request'
       patch 'applies/decision_one_month_request'
       
+      # 勤怠修正ログ
+      get 'attendances/attendance_log_search'
     end
     resources :attendances, only: :update
   end

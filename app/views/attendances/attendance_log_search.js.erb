@@ -1,0 +1,26 @@
+$((function) {
+  $("#submit_button").click(function() {
+    var input = $("#search-attendance-log").val();
+    $.ajax({
+      type: 'GET',
+      url: '/users/attendances'
+      data: {keyword: input},
+      dataType: 'json'
+    })
+    .done(function(data) {
+      $('.edit_log').empty();
+      data.forEach(function(edit_attendance_log) {
+        $('.edit_log').append('<td>${l(edit_attendance_log.worked.on, format: :default)}</td>');
+        $('.edit_log').append('<td>${l(edit_attendance_log.started_at, format: :time) if edit_attendance_log.started_at.present?}</td>');
+        $('.edit_log').append('<td>${l(edit_attendance_log.finished_at, format: :time) if edit_attendance_log.finished_at.present?}</td>');
+        $('.edit_log').append('<td>${l(edit_attendance_log.after_started_at, format: :time) if edit_attendance_log.after_started_at.present?}</td>'); 
+        $('.edit_log').append('<td>${l(edit_attendance_log.fter_finished_at, format: :time) if edit_attendance_log.ater_finished_at.present?}</td>');
+        $('.edit_log').append('<td>${User.find(edit_attendance_log.boss).name}</td>');
+        $('.edit_log').append('<td>${updated_at.in_time_zone('Tokyo').strftime("%Y/%m/%d")}</td>');
+      })
+    })
+    .fail(function(){
+      alert('検索に失敗しました。')
+    })
+  })
+})

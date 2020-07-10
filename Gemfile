@@ -1,5 +1,10 @@
 source 'https://rubygems.org'
 
+git_source(:github) do |repo_name|
+  repo_name = "#{repo_name}/#{repo_name}" unless repo_name.include?("/")
+  "https://github.com/#{repo_name}.git"
+end
+
 gem 'rails',        '5.1.6'
 gem 'rails-i18n'
 gem 'rounding'
@@ -23,6 +28,8 @@ gem 'activerecord-import'
 group :development, :test do
   gem 'sqlite3',      '1.3.13'
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
+  gem 'capybara', '~> 2.13'
+  gem 'selenium-webdriver'
 end
 
 group :development do
