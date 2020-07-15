@@ -134,7 +134,7 @@
           <td><%= day.estimated_finished_time.hour if day.estimated_finished_time.present? %></td>
           <td><%= set_minutes(day.estimated_finished_time) if day.estimated_finished_time.present? %></td>
           <td>
-            <% if day.started_at.present? && day.finished_at.present? &&  day.estimated_finished_time.present? %>
+            <% if ((day.started_at.present? && day.finished_at.present?) || (day.after_started_at.present? && day.after_finished_at.present?)) && day.estimated_finished_time.present? %>
               <%= oneday_overtime = overtime_calculation(day.estimated_finished_time, day.spread_day, @user.designated_work_end_time) %>
               <% @oneday_overtime = oneday_overtime %>
               <% @total_overtime_times= @total_overtime_times.to_f + oneday_overtime.to_f %>
