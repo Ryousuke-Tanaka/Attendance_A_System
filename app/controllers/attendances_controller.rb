@@ -137,15 +137,13 @@ class AttendancesController < ApplicationController
   
   # 勤怠ログ
   def edit_log
-    @approval_change_attendance_requests = Attendance.where(user_id: current_user, edit_attendance_request_status: "承認")
+    if params[:worked_on].present?
+      @approval_change_attendance_requests = Attendance.where(user_id: current_user, edit_attendance_request_status: "承認").where('worked_on LIKE ?', "%#{params[:worked_on]}%")
+      if @approval_change_attendance_requests.size > 0
+        render
+      end
+    end
   end
-  
-  # 勤怠ログ検索
-  def attendance_log_search
-    @approval_change_attendance_requests = Attendance.where(user_id: current_user, edit_attendance_request_status: "承認")
-    @edit_log = params[:worked_on]
-  end
-  
   
   private
   

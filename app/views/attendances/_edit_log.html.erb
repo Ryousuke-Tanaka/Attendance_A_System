@@ -1,0 +1,11 @@
+<% @approval_change_attendance_requests.each do |day| %>
+  <tr>
+    <td><%= l(day.worked_on, format: :default) %></td>
+    <td><%= l(day.started_at, format: :time) if day.started_at.present? %></td>
+    <td><%= l(day.finished_at, format: :time) if day.finished_at.present? %></td>
+    <td><%= l(day.after_started_at, format: :time) if day.after_started_at.present? %></td>
+    <td><%= l(day.after_finished_at, format: :time) if day.after_started_at.present? %></td>
+    <td><%= User.find(day.boss).name %></td>
+    <td><%= day.updated_at.in_time_zone('Tokyo').strftime("%Y/%m/%d") %></td>
+  </tr>
+<% end %>

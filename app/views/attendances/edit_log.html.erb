@@ -3,11 +3,20 @@
   
   <div class="row form-group">
     <div class="col-md-2" id="search-attendance-log">
-      <%= form_with model: @attendance, url: attendances_edit_log_user_path, method: :get, remote: true do |f|  %>
+      <%= form_with model: @attendance, url: attendances_edit_log_user_path, id: "form_edit_log", method: :get, remote: true do |f|  %>
         <%= f.month_field(:worked_on, required: true, class: "form-control") %>
-        <%= f.submit "検索", class: " btn-primary search-btn form-control" %>
+        <%= f.button "検索", id: "btn_edit_log", class: " btn-primary search-btn form-control" %>
       <% end %>
     </div>
+    
+    <script>
+      $(function() {
+        $('#btn_edit_log').click(function() {
+          
+        $('#form_edit_log').submit();
+        })
+      })
+    </script>
     
     <div id ="edit_attendance_header">
       <table class="table table-bordered table-condensed table-hover" id="table-attendances-log">
@@ -26,17 +35,7 @@
       <div id="edit_attendance_log">
         <tbody>
           <% if @approval_change_attendance_requests.present? %>
-            <% @approval_change_attendance_requests.each do |day| %>
-              <tr>
-                <td><%= l(day.worked_on, format: :default) %></td>
-                <td><%= l(day.started_at, format: :time) if day.started_at.present? %></td>
-                <td><%= l(day.finished_at, format: :time) if day.finished_at.present? %></td>
-                <td><%= l(day.after_started_at, format: :time) if day.after_started_at.present? %></td>
-                <td><%= l(day.after_finished_at, format: :time) if day.after_started_at.present? %></td>
-                <td><%= User.find(day.boss).name %></td>
-                <td><%= day.updated_at.in_time_zone('Tokyo').strftime("%Y/%m/%d") %></td>
-              </tr>
-            <% end %>
+            <%= render 'edit_log' %>
           <% end %>
         </tbody>
       </div>
