@@ -182,7 +182,7 @@
                 <%= apply.collection_select :one_month_boss, @superiors, :id, :name, {:include_blank => "選択してください。"}, {class: "form-control"} %>
               <% end %>
         
-              <% if @one_month_attendance.one_month_request_status == ("否認" || "承認") %>
+              <% if @one_month_attendance.one_month_request_status == "否認" || @one_month_attendance.one_month_request_status == "承認" %>
                 <%= f.submit "再申請", data: { confirm: "再申請してよろしいですか？" }, class: "btn btn-default btn-primary btn-request form-control" %>
               <% elsif @one_month_attendance.one_month_request_status == "申請中" %>
                 <%= f.submit "申請先変更", data: { confirm: "申請先変更してよろしいですか？" }, class: "btn btn-default btn-primary btn-request form-control" %>
