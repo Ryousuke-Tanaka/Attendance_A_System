@@ -97,7 +97,7 @@
           end
         %>
         <tr>
-          <td><%= link_to "残業申請", attendances_request_overtime_user_path(date: day.worked_on), remote: true, class: "btn btn-default btn-primary" if current_user == @user %></td>
+          <td><%= link_to "残業申請", attendances_request_overtime_user_path(date: day.worked_on), remote: true, class: "btn btn-default btn-primary #{'disabled' if Date.current < day.worked_on }" if current_user == @user %></td>
           <td><%= l(day.worked_on, format: :short) %></td>
           <td class="<%= day_of_week_color %>"><%= $days_of_the_week[day.worked_on.wday] %></td>
           <% if day.after_started_at.nil? || day.edit_attendance_request_status == "否認" %>
@@ -202,7 +202,7 @@
   
   <% unless current_user == @user %>
     <div class="footer-button">
-      <%= link_to "キャンセル", user_path(current_user), class: "btn btn-lg btn-default" %>
+      <%= link_to "戻る", user_path(current_user), class: "btn btn-lg btn-primary" %>
     </div>
   <% end %>
 </div>
