@@ -3,6 +3,7 @@ class UsersController < ApplicationController
   before_action :logged_in_user, only: [:show, :index, :show, :edit, :update, :destroy, :edit_basic_info, :update_basic_info, :export]
   before_action :correct_user, only: [:edit, :update, :export]
   before_action :admin_user, only: [:index, :destroy, :update_user_info, :edit_basic_info, :update_basic_info, :working_employee]
+  before_action :superior_or_correct_user, only: :show
   before_action :set_one_month, only: [:show, :export]
   before_action :not_admin_user, only: :show
   before_action :select_superiors, only: :show
@@ -44,7 +45,11 @@ class UsersController < ApplicationController
   def update
     if @user.update_attributes(user_params)
       flash[:success] = "ユーザー情報を更新しました。"
-      redirect_to @user
+      if current_user.admin?
+        redirect_to root_url
+      else
+        redirect_to @user
+      end
     else
       render :edit
     end

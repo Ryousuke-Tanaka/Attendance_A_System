@@ -2,10 +2,10 @@ class AttendancesController < ApplicationController
   before_action :set_user, only: [:edit_one_month, :update_one_month, :request_overtime, :update_overtime, :receive_overtime, :receive_change_attendance, :request_one_month,
                                   :update_change_attendance, :receive_one_month_request, :edit_log]
   before_action :logged_in_user, only: [:update, :edit_one_month, :request_overtime, :update_overtime, :receive_change_attendance, :update_change_attendance]
-  before_action :correct_user, only: [:request_overtime, :receive_overtime, :receive_change_attendance]
-  before_action :superior_or_correct_user, only: :update_overtime
-  before_action :admin_or_correct_user, only: [:update, :edit_one_month]
-  before_action :set_one_month, only: [:edit_one_month, :request_overtime, :edit_log]
+  before_action :correct_user, only: [:edit_one_month, :request_overtime, :update_overtime, :receive_overtime, :receive_change_attendance]
+  before_action :superior_user, only: [:receive_change_attendance, :update_change_attendance, :receive_overtime, :decision_overtime]
+  before_action :not_admin_user
+  before_action :set_one_month, only: [:edit_one_month, :update_one_month, :request_overtime, :edit_log]
   before_action :select_superiors, only: [:edit_one_month, :update_one_month, :request_overtime, :update_overtime]
   
   UPDATE_ERROR_MSG = "勤怠登録に失敗しました。やり直してください。"
@@ -51,7 +51,7 @@ class AttendancesController < ApplicationController
     flash[:success] = "1ヶ月分の勤怠情報を更新・申請しました。"
     redirect_to user_url(date: params[:date])
   rescue ActiveRecord::RecordInvalid
-     flash[:danger] = INVALID_ERROR_MSG
+    flash[:danger] = INVALID_ERROR_MSG
     redirect_to attendances_edit_one_month_user_url(date: params[:date])
   end
   
