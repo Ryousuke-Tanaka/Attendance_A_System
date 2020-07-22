@@ -57,7 +57,7 @@ class AttendancesController < ApplicationController
   
   # 勤怠修正を受領
   def receive_change_attendance
-    @change_attendance_requests = Attendance.where(boss: @user.id, edit_attendance_request_status: "申請中").group_by(&:user_id)
+    @change_attendance_requests = Attendance.where(boss: @user.id, edit_attendance_request_status: "申請中").group_by(&:user_id).all.order(worked_on: "ASC")
   end
   
   # 上長による勤怠修正を承認・否認
@@ -91,7 +91,7 @@ class AttendancesController < ApplicationController
   
   # 残業申請を受領
   def receive_overtime
-    @overtime_requests = Attendance.where(boss: @user.id, overtime_request_status: "申請中").group_by(&:user_id)
+    @overtime_requests = Attendance.where(boss: @user.id, overtime_request_status: "申請中").group_by(&:user_id).all.order(worked_on: "ASC")
   end
   
   # 社員が残業申請を登録 
@@ -99,7 +99,7 @@ class AttendancesController < ApplicationController
     @user = User.find(params[:id])
     ActiveRecord::Base.transaction do
       overtime_info_params.each do |id, item|
-        if params[:user][:attendances][id][:boss].present? 
+        if params[:user][:attendances][id][:overtime_boss].present? 
           @overtime = Attendance.find(id)
           @overtime.update_attributes!(item)
         else
@@ -108,7 +108,7 @@ class AttendancesController < ApplicationController
         end
       end
     end
-    @superior = User.find(@overtime.boss)
+    @superior = User.find(@overtime.overtime_boss)
     flash[:success] = "#{@superior.name}に残業申請をしました。"
     redirect_to user_url(date: params[:date])
   rescue ActiveRecord::RecordInvalid
@@ -149,7 +149,7 @@ class AttendancesController < ApplicationController
   
     # 1ヶ月分の勤怠情報を扱う
     def attendances_params
-      params.require(:user).permit(attendances: [:started_at, :finished_at, :after_started_at, :after_finished_at, :note, :spread_day, :boss])[:attendances]
+      params.require(:user).permit(attendances: [:started_at, :finished_at, :after_started_at, :after_finished_at, :edit_attendance_boss, :note, :spread_day])[:attendances]
     end
     
     # 勤怠情報修正承認・否認時のストロングパラメータ
@@ -159,7 +159,7 @@ class AttendancesController < ApplicationController
     
     # 残業申請時のストロングパラメータ
     def overtime_info_params
-      params.require(:user).permit(attendances: [:estimated_finished_time, :spread_day, :job_description, :boss, :overtime_request_status])[:attendances]
+      params.require(:user).permit(attendances: [:estimated_finished_time, :spread_day, :overtime_boss, :job_description, :overtime_request_status])[:attendances]
     end
     
     # 残業承認・否認時のストロングパラメータ

@@ -36,7 +36,8 @@ ActiveRecord::Schema.define(version: 20200702131026) do
     t.boolean "spread_day", default: false
     t.datetime "estimated_finished_time"
     t.string "job_description"
-    t.integer "boss"
+    t.integer "overtime_boss"
+    t.integer "edit_attendance_boss"
     t.integer "overtime_request_status", default: 0, null: false
     t.integer "edit_attendance_request_status", default: 0, null: false
     t.boolean "change", default: false

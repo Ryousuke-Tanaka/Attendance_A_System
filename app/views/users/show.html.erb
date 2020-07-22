@@ -141,8 +141,8 @@
             <% end %>
           </td>
           <td><%= day.job_description %></td>
-          <td><%= User.find(day.boss).name + "　勤怠編集" + day.edit_attendance_request_status if day.boss.present? && day.edit_attendance_request_status != "なし" %><br>
-              <%= User.find(day.boss).name + "　残業" + day.overtime_request_status if day.boss.present? && day.overtime_request_status != "なし" %>
+          <td><%= User.find(day.edit_attendance_boss).name + "　勤怠編集" + day.edit_attendance_request_status if day.boss.present? && day.edit_attendance_request_status != "なし" %><br>
+              <%= User.find(day.overtime_boss).name + "　残業" + day.overtime_request_status if day.boss.present? && day.overtime_request_status != "なし" %>
           </td>
         </tr>
       <% end %>

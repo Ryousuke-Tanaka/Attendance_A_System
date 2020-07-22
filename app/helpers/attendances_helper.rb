@@ -28,10 +28,10 @@ module AttendancesHelper
   
   # 残業時間を計算
   def overtime_calculation(estimated_finished_time, spread_day, designated_work_end_time)
-    estimated_finished_time = estimated_finished_time.round_to(15.minutes)
-    estimated_finished_time.change(year: designated_work_end_time.year, month: designated_work_end_time.month, day: designated_work_end_time.day)
     @attendance = Attendance.find(params[:id])
     @attendance.spread_day = spread_day
+    estimated_finished_time = estimated_finished_time.round_to(15.minutes)
+    estimated_finished_time.change(year: designated_work_end_time.year, month: designated_work_end_time.month, day: designated_work_end_time.day)
     if @attendance.spread_day
       format("%.2f",(((estimated_finished_time - designated_work_end_time) / 60) / 60.0) + 24)
     else
