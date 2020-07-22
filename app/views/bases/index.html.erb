@@ -69,12 +69,6 @@
         </tr>
         <% end %>
         <tr>
-          <td>
-            <div class="collaps">
-              <a href="#collapse-new" data-toggle="collapse" class="btn btn-default btn-primary">拠点情報追加</a>
-            </div>
-          </td>
-        </tr>
           <td colspan="5" class="collapse-new">
             <div class="collapse" id="collapse-new" aria-expanded="true" style>
               <%= form_with(model: @base, local: true) do |f| %>
@@ -95,5 +89,8 @@
         </tr>
       </tbody>
     </table>
+      <div class="collaps">
+        <a href="#collapse-new" data-toggle="collapse" class="btn btn-default btn-primary">拠点情報追加</a>
+      </div>
   </div>
 </div>

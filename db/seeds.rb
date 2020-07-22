@@ -43,4 +43,5 @@ User.create!(name: "上長B",
 end
 
 Base.create!(base_id: 1,
-             base_name: "本社")
+             base_name: "本社",
+             attendance_type: "出勤")
