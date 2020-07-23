@@ -10,12 +10,18 @@ CSV.generate(bom) do |csv|
     $days_of_the_week[day.worked_on.wday],
     if day.started_at.present?
       l(day.started_at.floor_to(15.minutes), format: :time)
+    elsif day.after_started_at.present? && day.edit_attendance_request_status == "承認"
+      l(day.after_started_at.floor_to(15.minutes), format: :time)
     end,
     if day.finished_at.present?
       l(day.finished_at.floor_to(15.minutes), format: :time)
+    elsif day.after_finished_at.present? && day.edit_attendance_request_status == "承認"
+      l(day.after_finished_at.floor_to(15.minutes), format: :time)
     end,
     if day.started_at.present? && day.finished_at.present?
       working_times(day.started_at.floor_to(15.minutes), day.finished_at.floor_to(15.minutes), day.spread_day)
+    elsif day.after_finished_at.present? && day.after_finished_at.present? && day.edit_attendance_request_status == "承認"
+      working_times(day.after_started_at.floor_to(15.minutes), day.after_finished_at.floor_to(15.minutes), day.spread_day)
     end
   ]
     csv << column_values

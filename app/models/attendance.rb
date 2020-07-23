@@ -2,10 +2,11 @@ class Attendance < ApplicationRecord
   belongs_to :user
   
   validates :worked_on, presence: true
-  validates :note, length: { maximum: 100 }
+  validates :note, length: { maximum: 100 }, presence: true, allow_nil: true
   validates :estimated_finished_time, presence: true, allow_nil: true
   validates :job_description, presence: true, allow_nil: true
-  validates :boss, presence: true, allow_nil: true
+  validates :overtime_boss, presence: true, allow_nil: true
+  validates :edit_attendance_boss, presence: true, allow_nil: true
   
   # 残業の承認・否認のステータス
   enum overtime_request_status: { なし: 0, 申請中: 1, 承認: 2, 否認: 3 }, _prefix: true

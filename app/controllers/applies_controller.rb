@@ -30,7 +30,7 @@ class AppliesController < ApplicationController
   end
   
   def receive_one_month_request
-    @receive_one_month_requests = Apply.where(one_month_boss: @user.id, one_month_request_status: "申請中").group_by(&:user_id).all.order(worked_on: "ASC")
+    @receive_one_month_requests = Apply.order(:one_month).where(one_month_boss: @user.id, one_month_request_status: "申請中").group_by(&:user_id)
   end
   
   def decision_one_month_request

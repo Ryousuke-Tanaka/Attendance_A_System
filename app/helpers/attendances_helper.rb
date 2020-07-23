@@ -31,16 +31,13 @@ module AttendancesHelper
     @attendance = Attendance.find(params[:id])
     @attendance.spread_day = spread_day
     estimated_finished_time = estimated_finished_time.round_to(15.minutes)
-    estimated_finished_time.change(year: designated_work_end_time.year, month: designated_work_end_time.month, day: designated_work_end_time.day)
-    if @attendance.spread_day
-      format("%.2f",(((estimated_finished_time - designated_work_end_time) / 60) / 60.0) + 24)
+    if @attendance.spread_day == true
+      format("%.2f",(((estimated_finished_time.time - designated_work_end_time.time) / 60) / 60.0) + 24)
+    elsif (estimated_finished_time - designated_work_end_time) <= 0
+      flash.now[:danger] = "残業時間としてカウントできない値が入っています。"
+      return -1.00
     else
-      if (estimated_finished_time - designated_work_end_time) <= 0
-        flash.now[:danger] = "残業時間としてカウントできない値が入っています。"
-        return -1.00      
-      else
-        format("%.2f",(((estimated_finished_time - designated_work_end_time) / 60) / 60.0))
-      end
+      format("%.2f",(((estimated_finished_time.time - designated_work_end_time.time) / 60) / 60.0))
     end
   end
   

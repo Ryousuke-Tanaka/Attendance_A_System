@@ -5,7 +5,7 @@
     <td><%= l(day.finished_at, format: :time) if day.finished_at.present? %></td>
     <td><%= l(day.after_started_at, format: :time) if day.after_started_at.present? %></td>
     <td><%= l(day.after_finished_at, format: :time) if day.after_started_at.present? %></td>
-    <td><%= User.find(day.boss).name %></td>
+    <td><%= User.find(day.edit_attendance_boss).name %></td>
     <td><%= day.updated_at.in_time_zone('Tokyo').strftime("%Y/%m/%d") %></td>
   </tr>
 <% end %>

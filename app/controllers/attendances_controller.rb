@@ -41,10 +41,15 @@ class AttendancesController < ApplicationController
   def update_one_month
     ActiveRecord::Base.transaction do
       attendances_params.each do |id, item|
-        if (item)[:after_started_at].present? && (item)[:after_finished_at].present? && (item)[:boss].present?
-          attendance = Attendance.find(id)
-          attendance.edit_attendance_request_status = "申請中" 
-          attendance.update_attributes!(item)
+        if (item)[:after_started_at].present? && (item)[:after_finished_at].present?
+          if (item)[:edit_attendance_boss].present? && (item)[:note].present?
+            attendance = Attendance.find(id)
+            attendance.edit_attendance_request_status = "申請中" 
+            attendance.update_attributes!(item)
+          else
+            flash[:danger] = "編集箇所には出社、退社、備考、指示者確認㊞が必要です。"
+            redirect_to attendances_edit_one_month_user_url(date: params[:date]) and return
+          end
         end
       end
     end
@@ -57,7 +62,7 @@ class AttendancesController < ApplicationController
   
   # 勤怠修正を受領
   def receive_change_attendance
-    @change_attendance_requests = Attendance.where(boss: @user.id, edit_attendance_request_status: "申請中").group_by(&:user_id).all.order(worked_on: "ASC")
+    @change_attendance_requests = Attendance.order(:worked_on).where(edit_attendance_boss: @user.id, edit_attendance_request_status: "申請中").group_by(&:user_id)
   end
   
   # 上長による勤怠修正を承認・否認
@@ -91,7 +96,7 @@ class AttendancesController < ApplicationController
   
   # 残業申請を受領
   def receive_overtime
-    @overtime_requests = Attendance.where(boss: @user.id, overtime_request_status: "申請中").group_by(&:user_id).all.order(worked_on: "ASC")
+    @overtime_requests = Attendance.order(:worked_on).where(overtime_boss: @user.id, overtime_request_status: "申請中").group_by(&:user_id)
   end
   
   # 社員が残業申請を登録 
@@ -99,18 +104,18 @@ class AttendancesController < ApplicationController
     @user = User.find(params[:id])
     ActiveRecord::Base.transaction do
       overtime_info_params.each do |id, item|
-        if params[:user][:attendances][id][:overtime_boss].present? 
+        if params[:user][:attendances][id][:overtime_boss].present? && params[:user][:attendances][id][:job_description].present? 
           @overtime = Attendance.find(id)
           @overtime.update_attributes!(item)
         else
-          flash[:danger] = INVALID_ERROR_MSG
-          redirect_to user_url(date: params[:date]) and return
+          flash[:danger] = "終了予定時間、業務内容、指示者確認㊞は必須です。"
+          redirect_back(fallback_location: root_path) and return
         end
       end
     end
     @superior = User.find(@overtime.overtime_boss)
     flash[:success] = "#{@superior.name}に残業申請をしました。"
-    redirect_to user_url(date: params[:date])
+    redirect_back(fallback_location: root_path)
   rescue ActiveRecord::RecordInvalid
     flash[:danger] = INVALID_ERROR_MSG
     redirect_to user_url(date: params[:date])
@@ -138,7 +143,7 @@ class AttendancesController < ApplicationController
   # 勤怠ログ
   def edit_log
     if params[:worked_on].present?
-      @approval_change_attendance_requests = Attendance.where(user_id: current_user, edit_attendance_request_status: "承認").where('worked_on LIKE ?', "%#{params[:worked_on]}%")
+      @approval_change_attendance_requests = Attendance.order(:worked_on).where(user_id: current_user, edit_attendance_request_status: "承認").where('worked_on LIKE ?', "%#{params[:worked_on]}%")
       if @approval_change_attendance_requests.size > 0
         render
       end
