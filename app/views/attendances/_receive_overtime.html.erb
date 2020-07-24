@@ -46,7 +46,7 @@
                   <td class="<%= day_of_week_color %>"><%= $days_of_the_week[day.worked_on.wday]%></td>
                   <td><%= day.estimated_finished_time.strftime("%H:%M") %></td>
                   <td><%= @member.designated_work_end_time.strftime("%H:%M") %></td>
-                  <td><%= overtime_calculation(day.estimated_finished_time, day.spread_day, @member.designated_work_end_time) %></td>
+                  <td><%= overtime_calculation(day.estimated_finished_time, day.overtime_spread_day, @member.designated_work_end_time) %></td>
                   <td><%= day.job_description %></td>
                   <td><%= attendance.select :overtime_request_status, Attendance.overtime_request_statuses.keys.to_a, {}, class: "form-control" %></td>
                   <td><%= attendance.check_box :change, { class: "check_box" }, true, false %></td>
