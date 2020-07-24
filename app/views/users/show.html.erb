@@ -125,12 +125,12 @@
           <% end %>
           <td></td>
           <td>
-            <% if day.started_at.present? && day.finished_at.present? %>
+            <% if day.started_at.present? && day.finished_at.present? && day.after_started_at.nil? && day.after_finished_at.nil? %>
               <%= str_times = working_times(day.started_at.floor_to(15.minutes), day.finished_at.floor_to(15.minutes), day.spread_day) %>
               <% @total_working_times = @total_working_times.to_f + str_times.to_f %>
             <% elsif day.after_started_at.present? && day.after_finished_at.present? %>
-            <%= str_times = working_times(day.after_started_at.floor_to(15.minutes), day.after_finished_at.floor_to(15.minutes), day.spread_day) %>
-            <% @total_working_times = @total_working_times.to_f + str_times.to_f %>
+              <%= str_times = working_times(day.after_started_at.floor_to(15.minutes), day.after_finished_at.floor_to(15.minutes), day.spread_day) %>
+              <% @total_working_times = @total_working_times.to_f + str_times.to_f %>
             <% end %>
           </td>
           <td><%= day.note %></td>
