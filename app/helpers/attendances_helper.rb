@@ -27,13 +27,13 @@ module AttendancesHelper
   end
   
   # 残業時間を計算
-  def overtime_calculation(estimated_finished_time, spread_day, designated_work_end_time)
+  def overtime_calculation(estimated_finished_time, overtime_spread_day, designated_work_end_time)
     @attendance = Attendance.find(params[:id])
-    @attendance.spread_day = spread_day
+    @attendance.overtime_spread_day = overtime_spread_day
     estimated_finished_time = estimated_finished_time.round_to(15.minutes)
     estimated_finished_time = estimated_finished_time.change(year: Date.current.year, month: Date.current.month, day: Date.current.day)
     designated_work_end_time = designated_work_end_time.change(year: Date.current.year, month: Date.current.month, day: Date.current.day)
-    if @attendance.spread_day == true
+    if @attendance.overtime_spread_day == true
       format("%.2f",(((estimated_finished_time.time - designated_work_end_time.time) / 60) / 60.0) + 24)
     elsif (estimated_finished_time - designated_work_end_time) <= 0
       flash.now[:danger] = "残業時間としてカウントできない値が入っています。"
