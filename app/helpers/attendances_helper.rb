@@ -31,6 +31,8 @@ module AttendancesHelper
     @attendance = Attendance.find(params[:id])
     @attendance.spread_day = spread_day
     estimated_finished_time = estimated_finished_time.round_to(15.minutes)
+    estimated_finished_time = estimated_finished_time.change(year: Date.current.year, month: Date.current.month, day: Date.current.day)
+    designated_work_end_time = designated_work_end_time.change(year: Date.current.year, month: Date.current.month, day: Date.current.day)
     if @attendance.spread_day == true
       format("%.2f",(((estimated_finished_time.time - designated_work_end_time.time) / 60) / 60.0) + 24)
     elsif (estimated_finished_time - designated_work_end_time) <= 0

@@ -41,12 +41,12 @@ class AttendancesController < ApplicationController
   def update_one_month
     ActiveRecord::Base.transaction do
       attendances_params.each do |id, item|
+        attendance = Attendance.find(id)
         if (item)[:after_started_at].present? && (item)[:after_finished_at].present?
           if (item)[:edit_attendance_boss].present? && (item)[:note].present?
-            attendance = Attendance.find(id)
             attendance.edit_attendance_request_status = "申請中" 
             attendance.update_attributes!(item)
-          else
+          elsif attendance.edit_attendance_request_status != "承認" 
             flash[:danger] = "編集箇所には出社、退社、備考、指示者確認㊞が必要です。"
             redirect_to attendances_edit_one_month_user_url(date: params[:date]) and return
           end
