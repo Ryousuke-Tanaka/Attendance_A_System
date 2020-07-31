@@ -149,6 +149,8 @@ class AttendancesController < ApplicationController
       @approval_change_attendance_requests = Attendance.order(:worked_on).where(user_id: current_user, edit_attendance_request_status: "承認").where(worked_on: first_day..last_day)
       if @approval_change_attendance_requests.size > 0
         render
+      else
+        flash.now[:danger] = "勤怠編集ログはありません。"
       end
     end
   end
