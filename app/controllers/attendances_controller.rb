@@ -143,10 +143,10 @@ class AttendancesController < ApplicationController
   # 勤怠ログ
   def edit_log
     if params[:worked_on].present?
-      @approval_change_attendance_requests = Attendance.order(:worked_on).where(user_id: current_user, edit_attendance_request_status: "承認").where('worked_on LIKE ?' "#{params[:worked_on]}" + "%")
-      first_day = DateTime.parse(params[:worked_on] + "-" + "01")
-      last_day = first_day.end_of_month
-      @approval_change_attendance_requests = Attendance.order(:worked_on).where(user_id: current_user, edit_attendance_request_status: "承認").where(worked_on: first_day..last_day)
+      first_day = DateTime.parse(params[:worked_on] + "-" + "01") # 文字列で取得した日付に文字列の01を加えてdatetime型に型変換し月初日をセット
+      last_day = first_day.end_of_month # 月末日を取得
+      # Attendanceテーブルからworked_onの日付順で整列し、現在ログインしているユーザ、承認のものを取得し、paramsで取得した月に合致するものをセット
+      @approval_change_attendance_requests = Attendance.order(:worked_on).where(user_id: current_user, edit_attendance_request_status: "承認").where(worked_on: first_day..last_day) 
       if @approval_change_attendance_requests.size > 0
         render
       else
