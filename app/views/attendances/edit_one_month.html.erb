@@ -45,7 +45,7 @@
                 <% end %>
               </td>
               <td><%= attendance.text_field :note, placeholder: "変更理由を入力してください。", class: "form-control" if Date.current >= day.worked_on %></td>
-              <% if day.edit_attendance_request_status == "承認" %>
+              <% if day.edit_attendance_request_status != "申請中" %>
                 <td><%= attendance.collection_select :edit_attendance_boss, @superiors, :id, :name, { :include_blank => "選択してください。", selected: "選択してください。" }, { class: "form-control" } if Date.current >= day.worked_on %></td>
               <% else %>
                 <td><%= attendance.collection_select :edit_attendance_boss, @superiors, :id, :name, { :include_blank => "選択してください。" }, { class: "form-control" } if Date.current >= day.worked_on %></td>
