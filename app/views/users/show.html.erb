@@ -182,7 +182,7 @@
             <%= form_with(model: @user, url: applies_request_one_month_user_path(date: @first_day), method: :patch, local: true) do |f|  %>
               <%= f.fields_for "applies[]", @one_month_attendance do |apply| %>
                 <%= apply.hidden_field :one_month_request_status, value: "申請中" %>
-                <%= apply.collection_select :one_month_boss, @superiors, :id, :name, {:include_blank => "選択してください。"}, {class: "form-control"} %>
+                <%= apply.collection_select :one_month_boss, @superiors, :id, :name, {:include_blank => "選択してください。", selected: "選択してください。"}, {class: "form-control"} %>
               <% end %>
         
               <% if @one_month_attendance.one_month_request_status == "否認" || @one_month_attendance.one_month_request_status == "承認" %>
@@ -195,10 +195,14 @@
           <% end %>
           </td>
         </tr>  
-        <% else %>
+        <% elsif @one_month_attendance.one_month_boss.present? %>
       <tr>
         <td>所属長承認 <%= User.find(@one_month_attendance.one_month_boss).name + " " + @one_month_attendance.one_month_request_status %></td>
       </tr>
+      <% else %>
+      <tr>
+        <td>所属長承認 未</td>
+      </tr>    
         <% end %>
     </tfoot>
   </table>
