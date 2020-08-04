@@ -159,7 +159,7 @@ class AttendancesController < ApplicationController
   
     # 1ヶ月分の勤怠情報を扱う
     def attendances_params
-      params.require(:user).permit(attendances: [:started_at, :finished_at, :after_started_at, :after_finished_at, :edit_attendance_boss, :note, :spread_day])[:attendances]
+      params.require(:user).permit(attendances: [:started_at, :finished_at, :before_started_at, :before_finished_at, :after_started_at, :after_finished_at, :edit_attendance_boss, :note, :spread_day])[:attendances]
     end
     
     # 勤怠情報修正承認・否認時のストロングパラメータ

@@ -35,6 +35,8 @@
               <% else %>
                 <td><%= attendance.time_field :after_started_at, class: "form-control" %></td>
                 <td><%= attendance.time_field :after_finished_at, class: "form-control" %></td>
+                <%= attendance.hidden_field :before_started_at, value: day.after_started_at %>
+                <%= attendance.hidden_field :before_finished_at, value: day.after_finished_at %>
               <% end %>
               <td><%= attendance.check_box :spread_day, :as => :boolean if Date.current >= day.worked_on %></td>
               <td>
