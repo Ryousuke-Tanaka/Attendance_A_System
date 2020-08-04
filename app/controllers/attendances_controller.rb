@@ -46,9 +46,8 @@ class AttendancesController < ApplicationController
           if (item)[:edit_attendance_boss].present? && (item)[:note].present?
             attendance.edit_attendance_request_status = "申請中" 
             attendance.update_attributes!(item)
-          elsif attendance.edit_attendance_request_status != "承認" 
-            flash[:danger] = "編集箇所には出社、退社、備考、指示者確認㊞が必要です。"
-            redirect_to attendances_edit_one_month_user_url(date: params[:date]) and return
+          else 
+            flash[:danger] = "申請箇所には出社、退社、備考、指示者確認㊞が必要です。"
           end
         end
       end
@@ -150,7 +149,7 @@ class AttendancesController < ApplicationController
       if @approval_change_attendance_requests.size > 0
         render
       else
-        flash.now[:danger] = "勤怠編集ログはありません。"
+        flash.now[:danger] = "選択月の勤怠編集ログはありません。"
       end
     end
   end
