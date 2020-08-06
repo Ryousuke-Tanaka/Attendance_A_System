@@ -35,9 +35,9 @@
               <% else %>
                 <td><%= attendance.time_field :after_started_at, class: "form-control" %></td>
                 <td><%= attendance.time_field :after_finished_at, class: "form-control" %></td>
-                <% if day.before_started_at.nil? %>
-                  <%= attendance.hidden_field :before_started_at, value: day.after_started_at %>
-                  <%= attendance.hidden_field :before_finished_at, value: day.after_finished_at %>
+                <% if day.before_started_at.nil? && day.edit_attendance_request_status == "承認" %>
+                  <%= attendance.hidden_field :before_started_at, value: day.started_at %>
+                  <%= attendance.hidden_field :before_finished_at, value: day.finished_at %>
                 <% end %>
                 <%= attendance.hidden_field :started_at, value: day.after_started_at if day.edit_attendance_request_status == "承認" %>
                 <%= attendance.hidden_field :finished_at, value: day.after_finished_at if day.edit_attendance_request_status == "承認" %>
